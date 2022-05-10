@@ -39,7 +39,8 @@ def down(designations: list):
         os.rename(img, f'{designation}.{suffix}')
         QproDefaultConsole.print(QproInfoString, f'图片名: {designation}.{suffix}')
         QproDefaultConsole.print('-' * QproDefaultConsole.width)
-    QproDefaultConsole.print(QproErrorString, f'失败: {failed}')
+    if failed:
+        QproDefaultConsole.print(QproErrorString, f'失败: {failed}')
 
 
 if __name__ == '__main__':
