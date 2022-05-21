@@ -1,4 +1,4 @@
-# Jav Cover Downloader | JAV 封面下载
+# Jav | JAV 工具箱
 
 ## 安装
 
@@ -16,16 +16,36 @@ cd /usr/local/share/zsh/site-functions
 Qpro gen-zsh-comp # 生成zsh自动补全脚本
 ```
 
-## 使用
+## 调用方式
 
 - 如果未注册为全局命令，则在本项目文件夹下执行:
   
   ```sh
-  qrun down -designations <多个番号...>
+  qrun cover -designations <多个番号...>
   ```
 
 - 如果已经注册为全局命令，则在任意位置:
 
   ```sh
-  javCoverDL down -designations <多个番号...>
+  jav cover -designations <多个番号...>
   ```
+
+## 支持的子命令
+
+| 子命令 | 调用方式                             | 描述                                         |
+| ------ | ------------------------------------ | -------------------------------------------- |
+| cover  | jav cover -designations <多个番号..> | 下载多个番号的封面图片                       |
+| info   | jav info <番号>                      | 查询番号信息                                 |
+| dl     | jav dl <番号>                        | 查询番号信息、获取复制下载链接并打开迅雷下载 |
+
+## Demo
+
+1. `jav dl SSIS-406`
+
+   ![](https://cos.rhythmlian.cn/ImgBed/14676959edb211a0441bef3ae8593e65.png)
+
+   图片左侧是后期人工打码，实际使用中可看清。
+
+## 注意事项
+
+本项目中的翻译引擎依赖于[QuickStart_Rhy](https://github.com/Rhythmicc/qs)中配置的默认翻译引擎，初次使用`qs`会自动引导配置。
