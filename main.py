@@ -139,17 +139,6 @@ def dl(designation: str):
     if copy:
         copy(url)
         QproDefaultConsole.print(QproInfoString, '链接已复制!')
-        if (system.startswith('darwin') or system.startswith('win')) and _ask({
-            'name': 'openInThunder',
-            'type': 'confirm',
-            'message': 'Open in Thunder? | 打开迅雷?',
-            'default': True
-        }):
-            import os
-            if system.startswith('darwin'):
-                os.system('open -a Thunder.app')
-            elif system.startswith('win'):
-                os.system('start /b /min "Thunder"')
     else:
         QproDefaultConsole.print(QproInfoString, f'链接: {url}')
 
