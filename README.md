@@ -14,6 +14,9 @@ pip3 install -r requirements.txt
 Qpro register-global # 注册全局命令
 cd /usr/local/share/zsh/site-functions
 Qpro gen-zsh-comp # 生成zsh自动补全脚本
+# 以下操作仅支持Mac，并且需要配置fig: https://fig.io/
+cd ~/.fig/user/autocomplete
+Qpro gen-fig-script
 ```
 
 ## 调用方式
