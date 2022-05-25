@@ -9,11 +9,11 @@ from QuickStart_Rhy.NetTools.NormalDL import normal_dl
 from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString
 
 
-app = Commander()
+app = Commander(True)
 
 
 @app.command()
-def cover(designations: list):
+def cover(designations: list, set_covername: str = None):
     """
     下载多个封面
 
@@ -42,11 +42,36 @@ def cover(designations: list):
             failed.append(designation)
             continue
         suffix = img.split('.')[-1]
-        os.rename(img, f'{designation}.{suffix}')
-        QproDefaultConsole.print(QproInfoString, f'图片名: {designation}.{suffix}')
+        filename = f'{designation}.{suffix}' if set_covername is None else f'{set_covername}.{suffix}'
+        os.rename(img, filename)
+        QproDefaultConsole.print(QproInfoString, f'图片名: {filename}')
         QproDefaultConsole.print('-' * QproDefaultConsole.width)
     if failed:
         QproDefaultConsole.print(QproErrorString, f'失败: {failed}')
+
+
+@app.command()
+def cover_all():
+    """
+    下载所有的封面
+
+    执行处的目录结构: . -> 老师们 -> 作品番号文件夹 -> 作品
+    """
+    import os
+    jump_flag = True
+    
+    for rt, dirs, files in os.walk('.'):
+        if jump_flag:
+            jump_flag = False
+            continue
+        for _dir in dirs:
+            if _dir.startswith('.'):
+                continue
+            dir_path = os.path.join(rt, _dir)
+            if os.path.exists(f'{dir_path}/folder.jpg') or os.path.exists(f'{dir_path}/folder.png') or os.path.exists(f'{dir_path}/folder.jpeg'):
+                continue
+            QproDefaultConsole.print(QproInfoString, f'{dir_path}')
+            app.real_call('cover', [_dir], set_covername=f'{dir_path}/folder')
 
 
 @app.command()

@@ -40,6 +40,22 @@ Qpro gen-fig-script
 | cover  | jav cover -designations <多个番号..> | 下载多个番号的封面图片                       |
 | info   | jav info <番号>                      | 查询番号信息                                 |
 | dl     | jav dl <番号>                        | 查询番号信息、获取复制下载链接并打开迅雷下载 |
+| cover-all | jav cover-all | 遍历目录下的番号并为其自动下载封面 |
+
+其中，cover-all要求执行目录结构为:
+```txt
+.
+├── Lauren花恋
+│ └──STARS-559
+│        ├── folder.jpg
+│       └──STARS-559.mp4
+├── Melody-Marks
+│  └── SY-190
+│       ├── folder.jpg
+│      └── sy-190.mp4
+```
+
+`folder.jpg`为cover-all子命令下载的封面。
 
 ## Demo
 
