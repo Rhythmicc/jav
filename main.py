@@ -54,7 +54,6 @@ def cover(designations: list, set_covername: str = ''):
 def cover_all():
     """
     下载所有的封面
-
     执行处的目录结构: . -> 老师们 -> 作品番号文件夹 -> 作品
     """
     import os
