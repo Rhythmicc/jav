@@ -13,7 +13,7 @@ app = Commander(True)
 
 
 @app.command()
-def cover(designations: list, set_covername: str = None):
+def cover(designations: list, set_covername: str = ''):
     """
     下载多个封面
 
@@ -42,7 +42,7 @@ def cover(designations: list, set_covername: str = None):
             failed.append(designation)
             continue
         suffix = img.split('.')[-1]
-        filename = f'{designation}.{suffix}' if set_covername is None else f'{set_covername}.{suffix}'
+        filename = f'{designation}.{suffix}' if not set_covername else f'{set_covername}.{suffix}'
         os.rename(img, filename)
         QproDefaultConsole.print(QproInfoString, f'图片名: {filename}')
         QproDefaultConsole.print('-' * QproDefaultConsole.width)
