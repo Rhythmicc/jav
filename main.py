@@ -1,6 +1,5 @@
 import os
 import re
-import sys
 
 import requests
 from QuickStart_Rhy import headers
@@ -59,7 +58,7 @@ def cover_all():
     import os
     jump_flag = True
     
-    for rt, dirs, files in os.walk('.'):
+    for rt, dirs, _ in os.walk('.'):
         if jump_flag:
             jump_flag = False
             continue
@@ -71,6 +70,22 @@ def cover_all():
                 continue
             QproDefaultConsole.print(QproInfoString, f'{dir_path}')
             app.real_call('cover', [_dir], set_covername=f'{dir_path}/folder')
+
+
+@app.command()
+def cover_this(set_covername: str = 'folder'):
+    """
+    下载当前目录的封面
+    :param set_covername: 封面的名字
+    """
+    import os
+    dir_path = os.getcwd()
+    if os.path.exists(f'{dir_path}/{set_covername}.jpg') or os.path.exists(f'{dir_path}/{set_covername}.png') or os.path.exists(f'{dir_path}/{set_covername}.jpeg'):
+        QproDefaultConsole.print(QproErrorString, f'{dir_path}/{set_covername}.jpg/png/jpeg 已存在!')
+        return
+    QproDefaultConsole.print(QproInfoString, f'{dir_path}')
+    dir_name = os.path.basename(dir_path)
+    app.real_call('cover', [dir_name], set_covername=f'{dir_path}/{set_covername}')
 
 
 @app.command()
@@ -142,7 +157,6 @@ def dl(designation: str):
     """
     app.real_call('info', designation)
     from QuickProject import _ask, requirePackage
-    from QuickStart_Rhy import system
     from QuickStart_Rhy.API.SimpleAPI import Designation2magnet
 
     searcher = Designation2magnet(designation)
@@ -169,3 +183,4 @@ def dl(designation: str):
 
 if __name__ == '__main__':
     app()
+
