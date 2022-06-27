@@ -38,9 +38,10 @@ Qpro gen-fig-script
 | 子命令 | 调用方式                             | 描述                                         |
 | ------ | ------------------------------------ | -------------------------------------------- |
 | cover  | jav cover -designations <多个番号..> | 下载多个番号的封面图片                       |
-| info   | jav info <番号>                      | 查询番号信息                                 |
-| dl     | jav dl <番号>                        | 查询番号信息、获取复制下载链接并打开迅雷下载 |
 | cover-all | jav cover-all | 遍历目录下的番号并为其自动下载封面 |
+| cover-this | jav cover-this | 在当前目录下载目录名称番号的封面 |
+| info   | jav info <番号>                      | 查询番号信息                                 |
+
 
 其中，cover-all要求执行目录结构为:
 ```txt
