@@ -5,7 +5,7 @@ import requests
 from QuickStart_Rhy import headers
 from QuickProject.Commander import Commander
 from QuickStart_Rhy.NetTools.NormalDL import normal_dl
-from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString
+from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString, _ask
 
 
 app = Commander(True)
