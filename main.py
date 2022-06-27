@@ -5,7 +5,7 @@ import requests
 from QuickStart_Rhy import headers
 from QuickProject.Commander import Commander
 from QuickStart_Rhy.NetTools.NormalDL import normal_dl
-from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString, _ask
+from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString
 
 
 app = Commander(True)
@@ -155,6 +155,7 @@ def info(designation: str):
     :param designation: 番号
     """
     _info(designation)
+    from QuickProject import _ask
     if not _ask({
         'type': 'confirm',
         'name': 'confirm',
@@ -162,7 +163,7 @@ def info(designation: str):
         'default': True
     }):
         return
-    from QuickProject import _ask, requirePackage
+    from QuickProject import requirePackage
     from QuickStart_Rhy.API.SimpleAPI import Designation2magnet
 
     searcher = Designation2magnet(designation)
