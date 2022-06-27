@@ -154,7 +154,7 @@ def info(designation: str):
 
     :param designation: 番号
     """
-    _info()
+    _info(designation)
     if not _ask({
         'type': 'confirm',
         'name': 'confirm',
