@@ -88,8 +88,7 @@ def cover_this(set_covername: str = 'folder'):
     app.real_call('cover', [dir_name], set_covername=f'{dir_path}/{set_covername}')
 
 
-@app.command()
-def info(designation: str):
+def _info(designation: str):
     """
     查询番号信息
 
@@ -149,13 +148,20 @@ def info(designation: str):
 
 
 @app.command()
-def dl(designation: str):
+def info(designation: str):
     """
     查询番号信息和链接
 
     :param designation: 番号
     """
-    app.real_call('info', designation)
+    _info()
+    if not _ask({
+        'type': 'confirm',
+        'name': 'confirm',
+        'message': '是否下载?',
+        'default': True
+    }):
+        return
     from QuickProject import _ask, requirePackage
     from QuickStart_Rhy.API.SimpleAPI import Designation2magnet
 
@@ -183,4 +189,3 @@ def dl(designation: str):
 
 if __name__ == '__main__':
     app()
-
