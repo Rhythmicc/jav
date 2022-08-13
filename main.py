@@ -1,11 +1,12 @@
 import os
 import re
+import time
 
 import requests
 from QuickStart_Rhy import headers
 from QuickProject.Commander import Commander
 from QuickStart_Rhy.NetTools.NormalDL import normal_dl
-from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString
+from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString, QproWarnString
 
 
 app = Commander(True)
@@ -147,6 +148,26 @@ def _info(designation: str):
         QproDefaultConsole.print(table, justify='center')
 
 
+def _info_content(designation: str, translate: bool = True):
+    from bs4 import BeautifulSoup
+    info_rt_url = 'https://javtxt.com'
+    html = requests.get(f'{info_rt_url}/search?type=id&q={designation}/', headers=headers).text
+    html = BeautifulSoup(html, 'lxml')
+    sub_url = html.find('a', class_='work')['href']
+    html = requests.get(f'{info_rt_url}{sub_url}', headers=headers).text
+    _content = re.findall('<p>(.*?)</p>', html)[0]
+    if translate:
+        from QuickStart_Rhy.api import translate as _translate
+        content = _translate(_content)
+        while content.startswith('[ERROR] 请求失败了'):
+            content = _translate(_content)
+            QproDefaultConsole.print(QproWarnString, '翻译失败, 等待1秒后重试!')
+            time.sleep(1)
+    else:
+        content = _content
+    return content
+
+
 @app.command()
 def info(designation: str):
     """
@@ -186,6 +207,67 @@ def info(designation: str):
         QproDefaultConsole.print(QproInfoString, '链接已复制!')
     else:
         QproDefaultConsole.print(QproInfoString, f'链接: {url}')
+
+
+@app.command()
+def nfo_all():
+    """
+    递归修正目录下的nfo数据(自动填充简介)
+    """
+    import os
+    for rt, _, files in os.walk('.'):
+        for file in files:
+            if file.endswith('.nfo'):
+                try:
+                    with open(os.path.join(rt, file), 'r', encoding='utf-8') as f:
+                        content = f.read()
+                except Exception as e:
+                    QproDefaultConsole.print(QproErrorString, f'{os.path.join(rt, file)} 读取失败!')
+                    continue
+                if '<plot />' not in content:
+                    continue
+                try:
+                    with QproDefaultConsole.status(f'正在修正 {os.path.join(rt, file)}'):
+                        content = content.replace('<plot />', '<plot><![CDATA[' + _info_content(file.split('.')[0]) + ']]></plot>', True)
+                        with open(os.path.join(rt, file), 'w', encoding='utf-8') as f:
+                            f.write(content)
+                        time.sleep(1)
+                except Exception as e:
+                    QproDefaultConsole.print(QproErrorString, f'修正 {os.path.join(rt, file)} 失败!')
+                    QproDefaultConsole.print(QproErrorString, repr(e))
+                else:
+                    QproDefaultConsole.print(QproInfoString, f'修正 {os.path.join(rt, file)} 成功!')
+
+
+@app.command()
+def nfo_this():
+    """
+    修正当前目录下的nfo数据(自动填充简介)
+    """
+    import os
+    _ls = os.listdir('.')
+    for file in _ls:
+        if not file.endswith('.nfo'):
+            continue
+        try:
+            with open(file, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            QproDefaultConsole.print(QproErrorString, f'{file} 读取失败!')
+            continue
+        if '<plot />' not in content:
+            continue
+        try:
+            with QproDefaultConsole.status(f'正在修正 {file}'):
+                content = content.replace('<plot />', '<plot><![CDATA[' + _info_content(file.split('.')[0]) + ']]></plot>', True)
+                with open(file, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                time.sleep(1)
+        except Exception as e:
+            QproDefaultConsole.print(QproErrorString, f'修正 {file} 失败!')
+            QproDefaultConsole.print(QproErrorString, repr(e))
+        else:
+            QproDefaultConsole.print(QproInfoString, f'修正 {file} 成功!')
 
 
 if __name__ == '__main__':

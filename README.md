@@ -41,6 +41,8 @@ Qpro gen-fig-script
 | cover-all | jav cover-all | 遍历目录下的番号并为其自动下载封面 |
 | cover-this | jav cover-this | 在当前目录下载目录名称番号的封面 |
 | info   | jav info <番号>                      | 查询番号信息                                 |
+| nfo-all | jav nfo-all | 递归修正目录下的nfo数据(自动填充简介) |
+| nfo-this | jav nfo-this | 修正当前目录下的nfo数据(自动填充简介) |
 
 
 其中，cover-all要求执行目录结构为:
@@ -57,6 +59,8 @@ Qpro gen-fig-script
 ```
 
 `folder.jpg`为cover-all子命令下载的封面。
+
+关于`nfo-*`命令，此命令是为了在[JavScraper](https://github.com/JavScraper/Emby.Plugins.JavScraper)插件工作失败时，重新刮削获取AV信息并修正。
 
 ## Demo
 
