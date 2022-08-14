@@ -10,6 +10,8 @@ from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString, Qp
 
 
 app = Commander(True)
+img_baseUrl = 'https://www.busjav.fun'
+info_baseUrl = 'https://javtxt.com'
 
 
 @app.command()
@@ -22,8 +24,9 @@ def cover(designations: list, set_covername: str = ''):
     failed = []
     for designation in designations:
         try:
-            html = requests.get(f'https://www5.javmost.com/search/{designation}/', headers=headers).text
-            img = re.findall('<img.*?card-img-top.*?data-src="(.*?)"', html)
+            headers['Referer'] = img_baseUrl
+            html = requests.get(f'{img_baseUrl}/{designation.upper()}/', headers=headers).text
+            img = re.findall('<a.*?bigImage.*?src="(.*?)"', html)
             if img:
                 img = img[0]
             else:
@@ -95,10 +98,12 @@ def _info(designation: str):
 
     :param designation: 番号
     """
-    html = requests.get(f'https://www5.javmost.com/search/{designation}/', headers=headers).text
-    img = re.findall('<img.*?card-img-top.*?data-src="(.*?)"', html)
+    headers['Referer'] = img_baseUrl
+    html = requests.get(f'{img_baseUrl}/{designation.upper()}/', headers=headers).text
+    img = re.findall('<a.*?bigImage.*?src="(.*?)".*?title="(.*?)"', html)
     if img:
-        img = img[0]
+        img, title = img[0]
+        img = img_baseUrl + '/' + img
     else:
         QproDefaultConsole.print(QproErrorString, f'{designation} 未找到!')
         return
@@ -112,11 +117,10 @@ def _info(designation: str):
 
     image_preview(img)
 
-    info_rt_url = 'https://javtxt.com'
-    html = requests.get(f'{info_rt_url}/search?type=id&q={designation}/', headers=headers).text
+    html = requests.get(f'{info_baseUrl}/search?type=id&q={designation}/', headers=headers).text
     html = BeautifulSoup(html, 'lxml')
     sub_url = html.find('a', class_='work')['href']
-    html = requests.get(f'{info_rt_url}{sub_url}', headers=headers).text
+    html = requests.get(f'{info_baseUrl}{sub_url}', headers=headers).text
     content = re.findall('<p>(.*?)</p>', html)[0]
     dl_content = re.findall('<dl>(.*?)</dl>', html, re.S)[0]
     dl_content = re.findall('<dd>(.*?)</dd>.*?<dt>(.*?)</dt>', dl_content, re.S)
@@ -131,7 +135,7 @@ def _info(designation: str):
         }, {
             'header': '描述',
             'justify': 'left'
-        }])
+        }], title=translate(title) + '\n')
         table.add_row(*['🗒️  简介', ' '.join(cut_string(translate(content), QproDefaultConsole.width - 17))])
         for item in dl_content:
             if '番号' in item[0] or '厂牌' in item[0]:
@@ -150,11 +154,10 @@ def _info(designation: str):
 
 def _info_content(designation: str, translate: bool = True):
     from bs4 import BeautifulSoup
-    info_rt_url = 'https://javtxt.com'
-    html = requests.get(f'{info_rt_url}/search?type=id&q={designation}/', headers=headers).text
+    html = requests.get(f'{info_baseUrl}/search?type=id&q={designation}/', headers=headers).text
     html = BeautifulSoup(html, 'lxml')
     sub_url = html.find('a', class_='work')['href']
-    html = requests.get(f'{info_rt_url}{sub_url}', headers=headers).text
+    html = requests.get(f'{info_baseUrl}{sub_url}', headers=headers).text
     _content = re.findall('<p>(.*?)</p>', html)[0]
     if translate:
         from QuickStart_Rhy.api import translate as _translate
