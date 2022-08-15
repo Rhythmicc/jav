@@ -13,9 +13,19 @@ app = Commander(True)
 img_baseUrl = 'https://www.busjav.fun'
 info_baseUrl = 'https://javtxt.com'
 
+nfo_template = """\
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<movie>
+  <plot><![CDATA[{plot}]]></plot>
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>{date} 00:00</dateadded>
+  <title>{title}</title>
+  <sorttitle>{designation}</sorttitle>
+</movie>\
+"""
 
-@app.command()
-def cover(designations: list, set_covername: str = ''):
+def _cover(designations: list, set_covername: str = ''):
     """
     下载多个封面
 
@@ -53,43 +63,32 @@ def cover(designations: list, set_covername: str = ''):
         QproDefaultConsole.print(QproErrorString, f'失败: {failed}')
 
 
+def translate(content):
+    from QuickStart_Rhy.api import translate as _translate
+    content = _translate(content)
+    while content.startswith('[ERROR] 请求失败了'):
+        content = _translate(content)
+        time.sleep(1)
+    return content
+
+
 @app.command()
-def cover_all():
+def cover():
     """
     下载所有的封面
-    执行处的目录结构: . -> 老师们 -> 作品番号文件夹 -> 作品
     """
     import os
-    jump_flag = True
     
-    for rt, dirs, _ in os.walk('.'):
-        if jump_flag:
-            jump_flag = False
-            continue
-        for _dir in dirs:
-            if _dir.startswith('.'):
+    for rt, _, files in os.walk('.'):
+        for file in files:
+            suffix = file.split('.')[-1]
+            if suffix not in ['mp4', 'mkv']:
                 continue
-            dir_path = os.path.join(rt, _dir)
-            if os.path.exists(f'{dir_path}/folder.jpg') or os.path.exists(f'{dir_path}/folder.png') or os.path.exists(f'{dir_path}/folder.jpeg'):
+            if os.path.exists(os.path.join(rt, 'folder.jpg')) or os.path.exists(os.path.join(rt, 'folder.png')) or os.path.exists(os.path.join(rt, 'folder.jpeg')):
                 continue
-            QproDefaultConsole.print(QproInfoString, f'{dir_path}')
-            app.real_call('cover', [_dir], set_covername=f'{dir_path}/folder')
-
-
-@app.command()
-def cover_this(set_covername: str = 'folder'):
-    """
-    下载当前目录的封面
-    :param set_covername: 封面的名字
-    """
-    import os
-    dir_path = os.getcwd()
-    if os.path.exists(f'{dir_path}/{set_covername}.jpg') or os.path.exists(f'{dir_path}/{set_covername}.png') or os.path.exists(f'{dir_path}/{set_covername}.jpeg'):
-        QproDefaultConsole.print(QproErrorString, f'{dir_path}/{set_covername}.jpg/png/jpeg 已存在!')
-        return
-    QproDefaultConsole.print(QproInfoString, f'{dir_path}')
-    dir_name = os.path.basename(dir_path)
-    app.real_call('cover', [dir_name], set_covername=f'{dir_path}/{set_covername}')
+            designation = file.split('.')[0]
+            QproDefaultConsole.print(QproInfoString, os.path.join(rt, file))
+            _cover([designation], set_covername=os.path.join(rt, 'folder'))
 
 
 def _info(designation: str):
@@ -98,12 +97,16 @@ def _info(designation: str):
 
     :param designation: 番号
     """
+    raw_info = {}
+    raw_info['designation'] = designation
     headers['Referer'] = img_baseUrl
     html = requests.get(f'{img_baseUrl}/{designation.upper()}/', headers=headers).text
     img = re.findall('<a.*?bigImage.*?src="(.*?)".*?title="(.*?)"', html)
     if img:
         img, title = img[0]
         img = img_baseUrl + '/' + img
+        raw_info['img'] = img
+        raw_info['title'] = translate(title)
     else:
         QproDefaultConsole.print(QproErrorString, f'{designation} 未找到!')
         return
@@ -124,51 +127,38 @@ def _info(designation: str):
     content = re.findall('<p>(.*?)</p>', html)[0]
     dl_content = re.findall('<dl>(.*?)</dl>', html, re.S)[0]
     dl_content = re.findall('<dd>(.*?)</dd>.*?<dt>(.*?)</dt>', dl_content, re.S)
-    if content:
-        from QuickStart_Rhy import cut_string
-        from QuickStart_Rhy.api import translate
-        from QuickStart_Rhy.TuiTools.Table import qs_default_table
+    if not content:
+        return
+    from QuickStart_Rhy import cut_string
+    from QuickStart_Rhy.TuiTools.Table import qs_default_table
 
-        table = qs_default_table([{
-            'header': '关键词',
-            'justify': 'left'
-        }, {
-            'header': '描述',
-            'justify': 'left'
-        }], title=translate(title) + '\n')
-        table.add_row(*['🗒️  简介', ' '.join(cut_string(translate(content), QproDefaultConsole.width - 17))])
-        for item in dl_content:
-            if '番号' in item[0] or '厂牌' in item[0]:
-                continue
-            item = list(item)
-            if item[0][1] != ' ' and '导演' not in item[0]:
-                item[0] = item[0][0] + ' ' + item[0][1:]
-            if '<a' in item[1]:
-                item[1] = ' '.join(re.findall('<a.*?>(.*?)</a>', item[1]))
-            if '导演' in item[0]:
-                item[1] = '  ' + item[1]
-            table.add_row(*item)
-        table.show_header = False
-        QproDefaultConsole.print(table, justify='center')
-
-
-def _info_content(designation: str, translate: bool = True):
-    from bs4 import BeautifulSoup
-    html = requests.get(f'{info_baseUrl}/search?type=id&q={designation}/', headers=headers).text
-    html = BeautifulSoup(html, 'lxml')
-    sub_url = html.find('a', class_='work')['href']
-    html = requests.get(f'{info_baseUrl}{sub_url}', headers=headers).text
-    _content = re.findall('<p>(.*?)</p>', html)[0]
-    if translate:
-        from QuickStart_Rhy.api import translate as _translate
-        content = _translate(_content)
-        while content.startswith('[ERROR] 请求失败了'):
-            content = _translate(_content)
-            QproDefaultConsole.print(QproWarnString, '翻译失败, 等待1秒后重试!')
-            time.sleep(1)
-    else:
-        content = _content
-    return content
+    table = qs_default_table([{
+        'header': '关键词',
+        'justify': 'left'
+    }, {
+        'header': '描述',
+        'justify': 'left'
+    }], title=raw_info['title'] + '\n')
+    
+    content = translate(content)
+    table.add_row(*['🗒️  简介', ' '.join(cut_string(content, QproDefaultConsole.width - 17))])
+    raw_info['plot'] = content
+    for item in dl_content:
+        if '番号' in item[0] or '厂牌' in item[0]:
+            continue
+        item = list(item)
+        if item[0][1] != ' ' and '导演' not in item[0]:
+            item[0] = item[0][0] + ' ' + item[0][1:]
+        if '<a' in item[1]:
+            item[1] = ' '.join(re.findall('<a.*?>(.*?)</a>', item[1]))
+        if '导演' in item[0]:
+            item[1] = '  ' + item[1]
+        if '时间' in item[0]:
+            raw_info['date'] = item[1]
+        table.add_row(*item)
+    table.show_header = False
+    QproDefaultConsole.print(table, justify='center')
+    return raw_info
 
 
 @app.command()
@@ -178,7 +168,7 @@ def info(designation: str):
 
     :param designation: 番号
     """
-    _info(designation)
+    info = _info(designation)
     from QuickProject import _ask
     if not _ask({
         'type': 'confirm',
@@ -210,67 +200,87 @@ def info(designation: str):
         QproDefaultConsole.print(QproInfoString, '链接已复制!')
     else:
         QproDefaultConsole.print(QproInfoString, f'链接: {url}')
+    
+    if not _ask({
+        'type': 'confirm',
+        'name': 'confirm',
+        'message': '是否保存封面并导出nfo文件?',
+        'default': True
+    }):
+        return
+    img_filename = normal_dl(info['img'])
+    suffix = img_filename.split('.')[-1]
+    if not os.path.exists(f'folder.{suffix}'):
+        os.rename(img_filename, f'folder.{suffix}')
+        img_filename = f'folder.{suffix}'
+    QproDefaultConsole.print(QproInfoString, f'封面已保存为 "{img_filename}"')
+    info.pop('img')
+    with open(f'{designation}.nfo', 'w') as f:
+        f.write(nfo_template.format(**info))
+    QproDefaultConsole.print(QproInfoString, f'nfo文件已保存为 "{designation}.nfo"')
 
 
-@app.command()
-def nfo_all():
-    """
-    递归修正目录下的nfo数据(自动填充简介)
-    """
-    import os
-    for rt, _, files in os.walk('.'):
-        for file in files:
-            if file.endswith('.nfo'):
-                try:
-                    with open(os.path.join(rt, file), 'r', encoding='utf-8') as f:
-                        content = f.read()
-                except Exception as e:
-                    QproDefaultConsole.print(QproErrorString, f'{os.path.join(rt, file)} 读取失败!')
-                    continue
-                if '<plot />' not in content:
-                    continue
-                try:
-                    with QproDefaultConsole.status(f'正在修正 {os.path.join(rt, file)}'):
-                        content = content.replace('<plot />', '<plot><![CDATA[' + _info_content(file.split('.')[0]) + ']]></plot>', True)
-                        with open(os.path.join(rt, file), 'w', encoding='utf-8') as f:
-                            f.write(content)
-                        time.sleep(1)
-                except Exception as e:
-                    QproDefaultConsole.print(QproErrorString, f'修正 {os.path.join(rt, file)} 失败!')
-                    QproDefaultConsole.print(QproErrorString, repr(e))
-                else:
-                    QproDefaultConsole.print(QproInfoString, f'修正 {os.path.join(rt, file)} 成功!')
+# @app.command()
+# def nfo_all():
+#     """
+#     递归修正目录下的nfo数据(自动填充简介)
+#     """
+#     import os
+#     for rt, _, files in os.walk('.'):
+#         for file in files:
+#             if file.endswith('.mp4') or file.endswith('.mkv'):
+#                 designation = file.split('.')[0]
+#                 app.real_call('cover', [designation], )
+#                 # try:
+#                 #     with open(os.path.join(rt, file), 'r', encoding='utf-8') as f:
+#                 #         content = f.read()
+#                 # except Exception as e:
+#                 #     QproDefaultConsole.print(QproErrorString, f'{os.path.join(rt, file)} 读取失败!')
+#                 #     continue
+#                 # if '<plot />' not in content:
+#                 #     continue
+#                 # try:
+#                 #     with QproDefaultConsole.status(f'正在修正 {os.path.join(rt, file)}'):
+#                 #         content = content.replace('<plot />', '<plot><![CDATA[' + _info_content(file.split('.')[0]) + ']]></plot>', True)
+#                 #         with open(os.path.join(rt, file), 'w', encoding='utf-8') as f:
+#                 #             f.write(content)
+#                 #         time.sleep(1)
+#                 # except Exception as e:
+#                 #     QproDefaultConsole.print(QproErrorString, f'修正 {os.path.join(rt, file)} 失败!')
+#                 #     QproDefaultConsole.print(QproErrorString, repr(e))
+#                 # else:
+#                 #     QproDefaultConsole.print(QproInfoString, f'修正 {os.path.join(rt, file)} 成功!')
 
 
-@app.command()
-def nfo_this():
-    """
-    修正当前目录下的nfo数据(自动填充简介)
-    """
-    import os
-    _ls = os.listdir('.')
-    for file in _ls:
-        if not file.endswith('.nfo'):
-            continue
-        try:
-            with open(file, 'r', encoding='utf-8') as f:
-                content = f.read()
-        except Exception as e:
-            QproDefaultConsole.print(QproErrorString, f'{file} 读取失败!')
-            continue
-        if '<plot />' not in content:
-            continue
-        try:
-            with QproDefaultConsole.status(f'正在修正 {file}'):
-                content = content.replace('<plot />', '<plot><![CDATA[' + _info_content(file.split('.')[0]) + ']]></plot>', True)
-                with open(file, 'w', encoding='utf-8') as f:
-                    f.write(content)
-                time.sleep(1)
-        except Exception as e:
-            QproDefaultConsole.print(QproErrorString, f'修正 {file} 失败!')
-            QproDefaultConsole.print(QproErrorString, repr(e))
-        else:
-            QproDefaultConsole.print(QproInfoString, f'修正 {file} 成功!')
+# @app.command()
+# def nfo_this():
+#     """
+#     修正当前目录下的nfo数据(自动填充简介)
+#     """
+#     import os
+#     _ls = os.listdir('.')
+#     for file in _ls:
+#         if not file.endswith('.nfo'):
+#             continue
+#         try:
+#             with open(file, 'r', encoding='utf-8') as f:
+#                 content = f.read()
+#         except Exception as e:
+#             QproDefaultConsole.print(QproErrorString, f'{file} 读取失败!')
+#             continue
+#         if '<plot />' not in content:
+#             continue
+#         try:
+#             with QproDefaultConsole.status(f'正在修正 {file}'):
+#                 content = content.replace('<plot />', '<plot><![CDATA[' + _info_content(file.split('.')[0]) + ']]></plot>', True)
+#                 with open(file, 'w', encoding='utf-8') as f:
+#                     f.write(content)
+#                 time.sleep(1)
+#         except Exception as e:
+#             QproDefaultConsole.print(QproErrorString, f'修正 {file} 失败!')
+#             QproDefaultConsole.print(QproErrorString, repr(e))
+#         else:
+#             QproDefaultConsole.print(QproInfoString, f'修正 {file} 成功!')
 
 
 if __name__ == '__main__':
