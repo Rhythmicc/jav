@@ -168,6 +168,7 @@ def info(designation: str):
 
     :param designation: 番号
     """
+    designation = designation.upper()
     info = _info(designation)
     from QuickProject import _ask
     if not _ask({

@@ -24,53 +24,38 @@ Qpro gen-fig-script
 - 如果未注册为全局命令，则在本项目文件夹下执行:
   
   ```sh
-  qrun cover -designations <多个番号...>
+  qrun cover
   ```
 
 - 如果已经注册为全局命令，则在任意位置:
 
   ```sh
-  jav cover -designations <多个番号...>
+  jav cover
   ```
 
 ## 支持的子命令
 
 | 子命令 | 调用方式                             | 描述                                         |
 | ------ | ------------------------------------ | -------------------------------------------- |
-| cover  | jav cover -designations <多个番号..> | 下载多个番号的封面图片                       |
-| cover-all | jav cover-all | 遍历目录下的番号并为其自动下载封面 |
-| cover-this | jav cover-this | 在当前目录下载目录名称番号的封面 |
-| info   | jav info <番号>                      | 查询番号信息                                 |
-| nfo-all | jav nfo-all | 递归修正目录下的nfo数据(自动填充简介) |
-| nfo-this | jav nfo-this | 修正当前目录下的nfo数据(自动填充简介) |
+| cover | jav cover | 遍历目录下的番号视频并为其自动下载封面 |
+| info   | jav info <番号> | 查询番号信息+获取下载链接+保存视频信息 |
 
-
-其中，cover-all要求执行目录结构为:
-```txt
-.
-├── Lauren花恋
-│ └──STARS-559
-│        ├── folder.jpg
-│       └──STARS-559.mp4
-├── Melody-Marks
-│  └── SY-190
-│       ├── folder.jpg
-│      └── sy-190.mp4
-```
-
-`folder.jpg`为cover-all子命令下载的封面。
-
-关于`nfo-*`命令，此命令是为了在[JavScraper](https://github.com/JavScraper/Emby.Plugins.JavScraper)插件工作失败时，重新刮削获取AV信息并修正。
+`info`命令保存的图像文件默认为`folder.<suffix>`，nfo文件默认为`<番号>.nfo`
 
 ## Demo
 
-1. `jav dl SSIS-406`
+1. `jav info SSIS-464`
 
-   ![](https://cos.rhythmlian.cn/ImgBed/14676959edb211a0441bef3ae8593e65.png)
+   ![](https://cos.rhythmlian.cn/ImgBed/6aca0d8eff3d737190c22a5cf4fd5bfa.png)
 
-   图片左侧是后期人工打码，实际使用中可看清。
+   图片是后期人工打码，实际使用中可看清。
+
+   nfo 文件内容:
+
+   ![](https://cos.rhythmlian.cn/ImgBed/8666a497a636036147f586dddf25d5cf.png)
 
 ## 注意事项
 
 1. 本项目中的翻译引擎依赖于[QuickStart_Rhy](https://github.com/Rhythmicc/qs)中配置的默认翻译引擎，初次使用`qs`会自动引导配置。
 2. 终端内图片预览只支持系统配合[iTerm2](https://iterm2.com/)使用。
+3. **请勿在墙内宣传本项目!**
