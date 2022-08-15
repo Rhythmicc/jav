@@ -15,7 +15,8 @@ Qpro register-global # 注册全局命令
 cd /usr/local/share/zsh/site-functions
 Qpro gen-zsh-comp # 生成zsh自动补全脚本
 # 以下操作仅支持Mac，并且需要配置fig: https://fig.io/
-cd ~/.fig/user/autocomplete
+cd ~/.fig/autocomplete # 如果这个路径不存在则尝试下一条
+# cd ~/.fig/user/autocomplete
 Qpro gen-fig-script
 ```
 
@@ -56,6 +57,6 @@ Qpro gen-fig-script
 
 ## 注意事项
 
-1. 本项目中的翻译引擎依赖于[QuickStart_Rhy](https://github.com/Rhythmicc/qs)中配置的默认翻译引擎，初次使用`qs`会自动引导配置。
+1. 本项目中的翻译引擎依赖于[QuickStart_Rhy](https://github.com/Rhythmicc/qs)中配置的默认翻译引擎，初次使用`qs`会自动引导配置；如果你不想使用`qs`，可以自行修改main.py中的translate函数。
 2. 终端内图片预览只支持系统配合[iTerm2](https://iterm2.com/)使用。
 3. **请勿在墙内宣传本项目!**

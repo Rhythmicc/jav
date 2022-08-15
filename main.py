@@ -38,7 +38,7 @@ def _cover(designations: list, set_covername: str = ''):
             html = requests.get(f'{img_baseUrl}/{designation.upper()}/', headers=headers).text
             img = re.findall('<a.*?bigImage.*?src="(.*?)"', html)
             if img:
-                img = img[0]
+                img = img_baseUrl + img[0]
             else:
                 QproDefaultConsole.print(QproErrorString, f'{designation} 未找到!')
                 failed.append(designation)
