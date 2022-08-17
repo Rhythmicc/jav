@@ -253,7 +253,7 @@ def info(designation: str):
 
     searcher = Designation2magnet(designation)
     infos = searcher.search_designation()
-    choices = [f'[{n + 1}] ' + i[1] + ': ' + i[-1] for n, i in enumerate(infos)] + ['[-1] 取消下载']
+    choices = [f'[{n + 1}] ' + i[1] + ': ' + i[-1] for n, i in enumerate(infos)] + ['[-1] 取消']
     ch_index = _ask({
         'type': 'list',
         'message': 'Select | 选择',
@@ -297,5 +297,5 @@ def info(designation: str):
     QproDefaultConsole.print(QproInfoString, f'nfo文件已保存为 "{designation}.nfo"')
 
 
-if __name__ == '__main__':
+def main():
     app()
