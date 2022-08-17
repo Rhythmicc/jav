@@ -1,30 +1,27 @@
 import os
 import re
-import time
 
 import requests
 from QuickStart_Rhy import headers
 from QuickStart_Rhy import requirePackage
-from QuickProject.Commander import Commander
 from QuickStart_Rhy.NetTools.NormalDL import normal_dl
 from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString, QproWarnString
 
-
-app = Commander(True)
 img_baseUrl = 'https://www.busjav.fun'
 info_baseUrl = 'https://javtxt.com'
 
 nfo_template = """\
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <movie>
-  <plot><![CDATA[{plot}]]></plot>
-  <outline />
-  <lockdata>false</lockdata>
-  <dateadded>{date} 00:00</dateadded>
-  <title>{title}</title>
-  <sorttitle>{designation}</sorttitle>
+    <plot><![CDATA[{plot}]]></plot>
+    <outline />
+    <lockdata>false</lockdata>
+    <dateadded>{date} 00:00</dateadded>
+    <title>{title}</title>
+    <sorttitle>{designation}</sorttitle>
 </movie>\
 """
+
 
 def _cover(designations: list, set_covername: str = ''):
     """
@@ -65,31 +62,15 @@ def _cover(designations: list, set_covername: str = ''):
 
 
 def translate(content):
+    import time
     from QuickStart_Rhy.api import translate as _translate
+    
     content = _translate(content)
     while content.startswith('[ERROR] 请求失败了'):
         content = _translate(content)
         time.sleep(1)
     return content
 
-
-@app.command()
-def cover():
-    """
-    下载所有的封面
-    """
-    import os
-    
-    for rt, _, files in os.walk('.'):
-        for file in files:
-            suffix = file.split('.')[-1]
-            if suffix not in ['mp4', 'mkv']:
-                continue
-            if os.path.exists(os.path.join(rt, 'folder.jpg')) or os.path.exists(os.path.join(rt, 'folder.png')) or os.path.exists(os.path.join(rt, 'folder.jpeg')):
-                continue
-            designation = file.split('.')[0]
-            QproDefaultConsole.print(QproInfoString, os.path.join(rt, file))
-            _cover([designation], set_covername=os.path.join(rt, 'folder'))
 
 
 def _info(designation: str):
@@ -173,23 +154,65 @@ def imgsConcat(imgs_url: list):
     """
     合并图片
     """
-    import math
-    from io import BytesIO
-    with QproDefaultConsole.status('获取样板图并拼接图片中'):
-        Image = requirePackage('PIL', 'Image', 'Pillow')
-        imgs = []
-        for url in imgs_url:
-            imgs.append(Image.open(BytesIO(requests.get(url, headers=headers).content)))
-        # 3 * n
-        one_width = imgs[0].width
-        one_height = imgs[0].height
-        width = max([i.width for i in imgs]) * 3
-        height = math.ceil(len(imgs) / 3) * one_height
-        result = Image.new('RGB', (width, height))
+    def is_wide():
+        width = QproDefaultConsole.width
+        height = QproDefaultConsole.height
+        rate = width / height
+        return rate > 2.5
 
-        for _id, img in enumerate(imgs):
-            result.paste(img, box=((_id % 3) * one_width, _id // 3 * one_height))
+    from io import BytesIO
+    from QuickStart_Rhy.NetTools.MultiSingleDL import multi_single_dl_content_ls
+    
+    Image = requirePackage('PIL', 'Image', 'Pillow')
+    imgs = [Image.open(BytesIO(i)) for i in multi_single_dl_content_ls(imgs_url)]
+
+    wide = is_wide()
+    heights_len = 4 if wide else 3
+    with QproDefaultConsole.status('拼接图片中') as st:
+        one_width = QproDefaultConsole.width // heights_len * 12
+        imgs = [i.resize((one_width, int(one_width * i.size[1] / i.size[0]))) for i in imgs]
+        imgs = sorted(imgs, key=lambda i: -i.size[0] * i.size[1])
+        heights = [0] * heights_len
+        for i in imgs:
+            heights[heights.index(min(heights))] += i.size[1]
+        if wide:
+            st.update('嗅探最佳拼接方式')
+            while max(heights) > one_width * heights_len:
+                heights_len += 1
+                heights = [0] * heights_len
+                one_width = QproDefaultConsole.width // heights_len * 12
+                for i in imgs:
+                    heights[heights.index(min(heights))] += i.size[1]
+        result = Image.new('RGBA', (one_width * heights_len, max(heights)))
+        heights = [0] * heights_len
+        for i in imgs:
+            min_height_index = heights.index(min(heights))
+            result.paste(i, (one_width * min_height_index, heights[min_height_index]))
+            heights[min_height_index] += i.size[1]
     return result
+
+
+from QuickProject.Commander import Commander
+app = Commander(True)
+
+
+@app.command()
+def cover():
+    """
+    下载所有的封面
+    """
+    import os
+    
+    for rt, _, files in os.walk('.'):
+        for file in files:
+            suffix = file.split('.')[-1]
+            if suffix not in ['mp4', 'mkv']:
+                continue
+            if os.path.exists(os.path.join(rt, 'folder.jpg')) or os.path.exists(os.path.join(rt, 'folder.png')) or os.path.exists(os.path.join(rt, 'folder.jpeg')):
+                continue
+            designation = file.split('.')[0]
+            QproDefaultConsole.print(QproInfoString, os.path.join(rt, file))
+            _cover([designation], set_covername=os.path.join(rt, 'folder'))
 
 
 @app.command()
@@ -230,15 +253,18 @@ def info(designation: str):
 
     searcher = Designation2magnet(designation)
     infos = searcher.search_designation()
-    choices = [f'[{n + 1}] ' + i[1] + ': ' + i[-1] for n, i in enumerate(infos)]
+    choices = [f'[{n + 1}] ' + i[1] + ': ' + i[-1] for n, i in enumerate(infos)] + ['[-1] 取消下载']
+    ch_index = _ask({
+        'type': 'list',
+        'message': 'Select | 选择',
+        'name': 'sub-url',
+        'choices': choices
+    })
+    if ch_index.startswith('[-1]'):
+        return
     url = searcher.get_magnet(
         infos[
-            choices.index(_ask({
-                'type': 'list',
-                'message': 'Select | 选择',
-                'name': 'sub-url',
-                'choices': choices
-            }))
+            choices.index(ch_index)
         ][0]
     )
 
