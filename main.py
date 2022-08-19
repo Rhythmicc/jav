@@ -23,6 +23,17 @@ nfo_template = """\
 """
 
 
+def translate(content):
+    import time
+    from QuickStart_Rhy.api import translate as _translate
+    
+    content = _translate(content)
+    while content.startswith('[ERROR] 请求失败了'):
+        content = _translate(content)
+        time.sleep(1)
+    return content
+
+
 def _cover(designations: list, set_covername: str = ''):
     """
     下载多个封面
@@ -59,18 +70,6 @@ def _cover(designations: list, set_covername: str = ''):
         QproDefaultConsole.print('-' * QproDefaultConsole.width)
     if failed:
         QproDefaultConsole.print(QproErrorString, f'失败: {failed}')
-
-
-def translate(content):
-    import time
-    from QuickStart_Rhy.api import translate as _translate
-    
-    content = _translate(content)
-    while content.startswith('[ERROR] 请求失败了'):
-        content = _translate(content)
-        time.sleep(1)
-    return content
-
 
 
 def _info(designation: str):
@@ -164,7 +163,11 @@ def imgsConcat(imgs_url: list):
     from QuickStart_Rhy.NetTools.MultiSingleDL import multi_single_dl_content_ls
     
     Image = requirePackage('PIL', 'Image', 'Pillow')
-    imgs = [Image.open(BytesIO(i)) for i in multi_single_dl_content_ls(imgs_url)]
+    try:
+        imgs = [Image.open(BytesIO(i)) for i in multi_single_dl_content_ls(imgs_url, referer=imgs_url[0].split('/')[2])]
+    except:
+        QproDefaultConsole.print(QproErrorString, '样品图获取失败!')
+        return
 
     wide = is_wide()
     heights_len = 4 if wide else 3
@@ -249,31 +252,39 @@ def info(designation: str):
         'default': True
     }):
         return
-    from QuickStart_Rhy.API.SimpleAPI import Designation2magnet
-
-    searcher = Designation2magnet(designation)
-    infos = searcher.search_designation()
-    choices = [f'[{n + 1}] ' + i[1] + ': ' + i[-1] for n, i in enumerate(infos)] + ['[-1] 取消']
-    ch_index = _ask({
+    if _ask({
         'type': 'list',
-        'message': 'Select | 选择',
-        'name': 'sub-url',
-        'choices': choices
-    })
-    if ch_index.startswith('[-1]'):
-        return
-    url = searcher.get_magnet(
-        infos[
-            choices.index(ch_index)
-        ][0]
-    )
+        'name': 'list',
+        'message': '请选择下载方式',
+        'choices': ['[1] jav 内置', '[2] 在 busjav 自行提取']
+    }) == '[1] jav 内置':
+        from QuickStart_Rhy.API.SimpleAPI import Designation2magnet
 
-    copy = requirePackage('pyperclip', 'copy', not_ask=True)
-    if copy:
-        copy(url)
-        QproDefaultConsole.print(QproInfoString, '链接已复制!')
+        searcher = Designation2magnet(designation)
+        infos = searcher.search_designation()
+        choices = [f'[{n + 1}] ' + i[1] + ': ' + i[-1] for n, i in enumerate(infos)] + ['[-1] 取消']
+        ch_index = _ask({
+            'type': 'list',
+            'message': 'Select | 选择',
+            'name': 'sub-url',
+            'choices': choices
+        })
+        if ch_index.startswith('[-1]'):
+            return
+        url = searcher.get_magnet(
+            infos[
+                choices.index(ch_index)
+            ][0]
+        )
+
+        copy = requirePackage('pyperclip', 'copy', not_ask=True)
+        if copy:
+            copy(url)
+            QproDefaultConsole.print(QproInfoString, '链接已复制!')
+        else:
+            QproDefaultConsole.print(QproInfoString, f'链接: {url}')
     else:
-        QproDefaultConsole.print(QproInfoString, f'链接: {url}')
+        app.real_call('web', designation)
     
     if not _ask({
         'type': 'confirm',
@@ -297,5 +308,18 @@ def info(designation: str):
     QproDefaultConsole.print(QproInfoString, f'nfo文件已保存为 "{designation}.nfo"')
 
 
+@app.command()
+def web(designation: str):
+    """
+    通过浏览器获取番号信息
+    """
+    from QuickStart_Rhy import open_url
+    open_url([f'{img_baseUrl}/{designation.upper()}/'])
+
+
 def main():
     app()
+
+
+if __name__ == "__main__":
+    main()
