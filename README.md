@@ -8,6 +8,10 @@
 pip3 install -r requirements.txt
 ```
 
+### 在`app.py`中设置数据源
+
+默认使用`jav321`作为数据源，因此文件前两行是`from .jav321 ...`，如需切换成`busjav`则将`jav321`替换为`busjav`即可 (注意前面的点`.`不要删掉了)。
+
 ### [将此项目注册为全局命令](https://rhythmlian.cn/2020/02/14/QuickProject/#%E5%B0%86Commander%E5%BA%94%E7%94%A8%E6%B3%A8%E5%86%8C%E4%B8%BA%E5%85%A8%E5%B1%80%E5%91%BD%E4%BB%A4)
 
 ```sh
@@ -40,6 +44,7 @@ Qpro gen-fig-script
 | ------ | ------------------------------------ | -------------------------------------------- |
 | cover | jav cover | 遍历目录下的番号视频并为其自动下载封面 |
 | info   | jav info <番号> | 查询番号信息+获取下载链接+保存视频信息 |
+| web | jav web <番号> | 从浏览器查询番号信息 |
 
 `info`命令保存的图像文件默认为`folder.<suffix>`，nfo文件默认为`<番号>.nfo`
 

@@ -1,7 +1,7 @@
 {
  "compile_tool": "",
- "compile_filename": "main.py",
- "executable_filename": "python3 main.py",
+ "compile_filename": "app.py",
+ "executable_filename": "python3 -m jav.app",
  "input_file": "dist/input.txt",
  "template_root": "template/",
  "server_target": [
