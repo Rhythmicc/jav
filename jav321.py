@@ -55,7 +55,6 @@ def _info(designation: str):
         raw_info = {}
         raw_info['designation'] = designation
         _ls = designation.lower().split('-')
-        QproDefaultConsole.print(QproInfoString, '链接: ', f'{img_baseUrl}/{_ls[0]}{"%05d" % int(_ls[1])}')
         html = requests.get(f'{img_baseUrl}/{_ls[0]}{"%05d" % int(_ls[1])}', headers=headers).text
         html = BeautifulSoup(html, 'html.parser')
         st.update('解析番号图片信息')
