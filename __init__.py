@@ -46,7 +46,7 @@ def imgsConcat(imgs_url: list):
     
     Image = requirePackage('PIL', 'Image', 'Pillow')
     try:
-        imgs = [Image.open(BytesIO(i)) for i in multi_single_dl_content_ls(imgs_url, referer=imgs_url[0].split('/')[2])]
+        imgs = [Image.open(BytesIO(i)) for i in multi_single_dl_content_ls(imgs_url, referer=imgs_url[0].split('/')[2]) if i]
     except:
         QproDefaultConsole.print(QproErrorString, '样品图获取失败!')
         return

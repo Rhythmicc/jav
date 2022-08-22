@@ -50,17 +50,12 @@ Qpro gen-fig-script
 
 ## Demo
 
-1. `jav info SSIS-464`
-
-   ![](https://cos.rhythmlian.cn/ImgBed/6aca0d8eff3d737190c22a5cf4fd5bfa.png)
-
-   图片是后期人工打码，实际使用中可看清。
+1. [点此预览视频](https://cos.rhythmlian.cn/ImgBed/dfec21722022947a677ead76b6979d40.mp4)
+2. `jav info SSIS-464`
 
    nfo 文件内容:
 
    ![](https://cos.rhythmlian.cn/ImgBed/8666a497a636036147f586dddf25d5cf.png)
-
-2. [点此预览视频](https://cos.rhythmlian.cn/ImgBed/dfec21722022947a677ead76b6979d40.mp4)
 
 ## 注意事项
 
