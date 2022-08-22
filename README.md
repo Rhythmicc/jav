@@ -20,20 +20,15 @@ pip3 install -r requirements.txt
 
 ### [将此项目注册为全局命令](https://rhythmlian.cn/2020/02/14/QuickProject/#%E5%B0%86Commander%E5%BA%94%E7%94%A8%E6%B3%A8%E5%86%8C%E4%B8%BA%E5%85%A8%E5%B1%80%E5%91%BD%E4%BB%A4)
 
-1. 第一次注册：设置`PYTHONPATH`环境变量
-  ```sh
-  export $PYTHONPATH=$PYTHONPATH:<jav文件夹的父目录>
-  ```
-2. 注册全局命令
-  ```sh
-  Qpro register-global # 注册全局命令
-  cd /usr/local/share/zsh/site-functions
-  Qpro gen-zsh-comp # 生成zsh自动补全脚本
-  # 以下操作仅支持Mac，并且需要配置fig: https://fig.io/
-  cd ~/.fig/autocomplete # 如果这个路径不存在则尝试下一条
-  # cd ~/.fig/user/autocomplete
-  Qpro gen-fig-script
-  ```
+```sh
+Qpro register-global # 注册全局命令，第一次注册请点击上方链接查阅文档
+cd /usr/local/share/zsh/site-functions
+Qpro gen-zsh-comp # 生成zsh自动补全脚本
+# 以下操作仅支持Mac，并且需要配置fig: https://fig.io/
+cd ~/.fig/autocomplete # 如果这个路径不存在则尝试下一条
+# cd ~/.fig/user/autocomplete
+Qpro gen-fig-script
+```
 
 ## 调用方式
 
