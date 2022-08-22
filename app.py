@@ -53,67 +53,65 @@ def info(designation: str):
         }):
             img_concated.save(f'{designation}_samples.png')
             QproDefaultConsole.print(QproInfoString, f'已保存为: "{designation}_samples.png"')
-    if not _ask({
+    if _ask({
         'type': 'confirm',
         'name': 'confirm',
         'message': '是否下载?',
         'default': True
-    }):
-        return
-    if _ask({
-        'type': 'list',
-        'name': 'list',
-        'message': '请选择下载方式',
-        'choices': ['[1] jav 内置', '[2] 在 jav321 自行提取']
-    }) == '[1] jav 内置':
-        from QuickStart_Rhy.API.SimpleAPI import Designation2magnet
-
-        searcher = Designation2magnet(designation)
-        infos = searcher.search_designation()
-        choices = [f'[{n + 1}] ' + i[1] + ': ' + i[-1] for n, i in enumerate(infos)] + ['[-1] 取消']
-        ch_index = _ask({
+    }):    
+        if _ask({
             'type': 'list',
-            'message': 'Select | 选择',
-            'name': 'sub-url',
-            'choices': choices
-        })
-        if ch_index.startswith('[-1]'):
-            return
-        url = searcher.get_magnet(
-            infos[
-                choices.index(ch_index)
-            ][0]
-        )
+            'name': 'list',
+            'message': '请选择下载方式',
+            'choices': ['[1] jav 内置', f'[2] 在 {source_name} 自行提取']
+        }) == '[1] jav 内置':
+            from QuickStart_Rhy.API.SimpleAPI import Designation2magnet
 
-        copy = requirePackage('pyperclip', 'copy', not_ask=True)
-        if copy:
-            copy(url)
-            QproDefaultConsole.print(QproInfoString, '链接已复制!')
+            searcher = Designation2magnet(designation)
+            infos = searcher.search_designation()
+            choices = [f'[{n + 1}] ' + i[1] + ': ' + i[-1] for n, i in enumerate(infos)] + ['[-1] 取消']
+            ch_index = _ask({
+                'type': 'list',
+                'message': 'Select | 选择',
+                'name': 'sub-url',
+                'choices': choices
+            })
+            if ch_index.startswith('[-1]'):
+                return
+            url = searcher.get_magnet(
+                infos[
+                    choices.index(ch_index)
+                ][0]
+            )
+
+            copy = requirePackage('pyperclip', 'copy', not_ask=True)
+            if copy:
+                copy(url)
+                QproDefaultConsole.print(QproInfoString, '链接已复制!')
+            else:
+                QproDefaultConsole.print(QproInfoString, f'链接: {url}')
         else:
-            QproDefaultConsole.print(QproInfoString, f'链接: {url}')
-    else:
-        app.real_call('web', designation)
+            app.real_call('web', designation)
     
-    if not _ask({
+    if _ask({
         'type': 'confirm',
         'name': 'confirm',
         'message': '是否保存封面并导出nfo文件?',
         'default': True
     }):
-        return
-    img_filename = normal_dl(info['img'])
-    suffix = img_filename.split('.')[-1]
-    if not os.path.exists(f'folder.{suffix}'):
-        os.rename(img_filename, f'folder.{suffix}')
-        img_filename = f'folder.{suffix}'
-    QproDefaultConsole.print(QproInfoString, f'封面已保存为 "{img_filename}"')
-    if 'img' in info:
-        info.pop('img')
-    if 'imgs' in info:
-        info.pop('imgs')
-    with open(f'{designation}.nfo', 'w') as f:
-        f.write(nfo_template.format(**info))
-    QproDefaultConsole.print(QproInfoString, f'nfo文件已保存为 "{designation}.nfo"')
+        img_filename = normal_dl(info['img'])
+        suffix = img_filename.split('.')[-1]
+        if not os.path.exists(f'folder.{suffix}'):
+            os.rename(img_filename, f'folder.{suffix}')
+            img_filename = f'folder.{suffix}'
+        QproDefaultConsole.print(QproInfoString, f'封面已保存为 "{img_filename}"')
+        if 'img' in info:
+            info.pop('img')
+        if 'imgs' in info:
+            info.pop('imgs')
+        with open(f'{designation}.nfo', 'w') as f:
+            f.write(nfo_template.format(**info))
+        QproDefaultConsole.print(QproInfoString, f'nfo文件已保存为 "{designation}.nfo"')
 
 
 @app.command()
