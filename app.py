@@ -1,5 +1,5 @@
 from .jav321 import *
-from .jav321 import _cover, _info
+from .jav321 import _cover, _info, _web
 
 from QuickProject.Commander import Commander
 app = Commander(True)
@@ -121,9 +121,7 @@ def web(designation: str):
     """
     通过浏览器获取番号信息
     """
-    from QuickStart_Rhy import open_url
-    _ls = designation.lower().split('-')
-    open_url([f'{img_baseUrl}/{_ls[0]}{"%05d" % int(_ls[1])}'])
+    _web(designation)
 
 
 def main():

@@ -118,3 +118,13 @@ def _info(designation: str):
         table.show_header = False
     QproDefaultConsole.print(table, justify='center')
     return raw_info
+
+
+def _web(designation: str):
+    """
+    查询番号网页信息
+    
+    :param designation: 番号
+    """
+    from QuickStart_Rhy import open_url
+    open_url(f'{img_baseUrl}/{designation.upper()}/')

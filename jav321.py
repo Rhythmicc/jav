@@ -120,3 +120,13 @@ def _info(designation: str):
     QproDefaultConsole.print(table, justify='center')
     return raw_info
 
+
+def _web(designation: str):
+    """
+    查询番号网页信息
+    
+    :param designation: 番号
+    """
+    from QuickStart_Rhy import open_url
+    _ls = designation.lower().split('-')
+    open_url([f'{img_baseUrl}/{_ls[0]}{"%05d" % int(_ls[1])}'])
