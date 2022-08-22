@@ -1,5 +1,5 @@
-from .jav321 import *
-from .jav321 import _cover, _info, _web
+from .source.jav321 import *
+from .source.jav321 import _cover, _info, _web
 
 from QuickProject.Commander import Commander
 app = Commander(True)

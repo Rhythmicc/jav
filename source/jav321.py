@@ -1,4 +1,4 @@
-from . import *
+from .. import *
 
 img_baseUrl = 'https://www.jav321.com/video'
 source_name = 'jav321'

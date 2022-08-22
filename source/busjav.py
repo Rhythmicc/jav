@@ -1,4 +1,4 @@
-from . import *
+from .. import *
 
 img_baseUrl = 'https://www.busjav.fun'
 source_name = 'busjav'
