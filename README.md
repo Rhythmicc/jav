@@ -69,8 +69,8 @@ Qpro gen-fig-script
 2. 增加其他自定义刮削方式，在`source`文件夹下新建一个`<站点名>.py`，结构如下:
   ```py
   from .. import *
-
-  source_name = 'jav321' # 站点名
+  
+  source_name = '' # 站点名
 
 
   @cover_func_wrapper
