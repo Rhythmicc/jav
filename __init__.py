@@ -83,7 +83,7 @@ def cover_func_wrapper(func):
     """
     封面图片获取函数装饰器
 
-    :param func: 封面图片获取函数
+    :param func: lambda description: img_url
     """
     def wrapper(designations: list, set_covername: str = '', **kwargs):
         """
@@ -116,7 +116,7 @@ def info_func_wrapper(func):
     """
     番号信息获取函数装饰器
 
-    :param func: 番号信息获取函数
+    :param func: lambda designation: {'img': '', 'imgs': '', 'title': ''}
     """
     def wrapper(designation: str, **kwargs):
         """
