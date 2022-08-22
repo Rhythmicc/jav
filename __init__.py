@@ -7,6 +7,8 @@ from QuickStart_Rhy import requirePackage
 from QuickStart_Rhy.NetTools.NormalDL import normal_dl
 from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString, QproWarnString
 
+info_baseUrl = 'https://javtxt.com'
+
 nfo_template = """\
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <movie>
@@ -75,3 +77,101 @@ def imgsConcat(imgs_url: list):
             result.paste(i, (one_width * min_height_index, heights[min_height_index]))
             heights[min_height_index] += i.size[1]
     return result
+
+
+def cover_func_wrapper(func):
+    """
+    封面图片获取函数装饰器
+
+    :param func: 封面图片获取函数
+    """
+    def wrapper(designations: list, set_covername: str = '', **kwargs):
+        """
+        封面图片获取函数装饰器
+
+        :param designations: 番号列表
+        :param set_covername: 设置封面图片名称
+        """
+        try:
+            failed = []
+            for designation in designations:
+                try:
+                    img = func(designation, **kwargs)
+                    img = normal_dl(img)
+                    suffix = img.split('.')[-1]
+                    filename = f'{designation}.{suffix}' if not set_covername else f'{set_covername}.{suffix}'
+                    os.rename(img, filename)
+                    QproDefaultConsole.print(QproInfoString, f'图片名: {filename}')
+                    QproDefaultConsole.print('-' * QproDefaultConsole.width)
+                except Exception as e:
+                    failed.append(designation)
+            if failed:
+                QproDefaultConsole.print(QproErrorString, '封面图获取失败: {}'.format(failed))
+        except Exception as e:
+            QproDefaultConsole.print(QproErrorString, '出现错误: {}'.format(e))
+    return wrapper
+
+
+def info_func_wrapper(func):
+    """
+    番号信息获取函数装饰器
+
+    :param func: 番号信息获取函数
+    """
+    def wrapper(designation: str, **kwargs):
+        """
+        番号信息获取函数装饰器
+
+        :param designations: 番号列表
+        """
+        try:
+            raw_info = func(designation, **kwargs)
+            if not raw_info:
+                QproDefaultConsole.print(QproErrorString, '番号信息获取失败: {}'.format(designation))
+                return
+            with QproDefaultConsole.status('查询番号信息') as st:
+                from bs4 import BeautifulSoup
+                html = requests.get(f'{info_baseUrl}/search?type=id&q={designation}/', headers=headers).text
+                html = BeautifulSoup(html, 'lxml')
+                sub_url = html.find('a', class_='work')['href']
+                html = requests.get(f'{info_baseUrl}{sub_url}', headers=headers).text
+                content = re.findall('<p>(.*?)</p>', html)[0]
+                dl_content = re.findall('<dl>(.*?)</dl>', html, re.S)[0]
+                dl_content = re.findall('<dd>(.*?)</dd>.*?<dt>(.*?)</dt>', dl_content, re.S)
+                if not content:
+                    return
+                from QuickStart_Rhy import cut_string
+                from QuickStart_Rhy.TuiTools.Table import qs_default_table
+
+                table = qs_default_table([{
+                    'header': '关键词',
+                    'justify': 'left'
+                }, {
+                    'header': '描述',
+                    'justify': 'left'
+                }], title=raw_info['title'] + '\n')
+                
+                st.update('翻译番号信息')
+                content = translate(content)
+                st.update('准备展示')
+                table.add_row(*['🗒️  简介', ' '.join(cut_string(content, QproDefaultConsole.width - 17))])
+                raw_info['plot'] = content
+                for item in dl_content:
+                    if '番号' in item[0] or '厂牌' in item[0]:
+                        continue
+                    item = list(item)
+                    if item[0][1] != ' ' and '导演' not in item[0]:
+                        item[0] = item[0][0] + ' ' + item[0][1:]
+                    if '<a' in item[1]:
+                        item[1] = ' '.join(re.findall('<a.*?>(.*?)</a>', item[1]))
+                    if '导演' in item[0]:
+                        item[1] = '  ' + item[1]
+                    if '时间' in item[0]:
+                        raw_info['date'] = item[1]
+                    table.add_row(*item)
+                table.show_header = False
+            QproDefaultConsole.print(table, justify='center')
+            return raw_info
+        except Exception as e:
+            QproDefaultConsole.print(QproErrorString, '出现错误: {}'.format(e))
+    return wrapper
