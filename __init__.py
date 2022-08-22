@@ -39,7 +39,7 @@ def imgsConcat(imgs_url: list):
         width = QproDefaultConsole.width
         height = QproDefaultConsole.height
         rate = width / height
-        return rate > 2.5
+        return rate > 2
 
     from io import BytesIO
     from QuickStart_Rhy.NetTools.MultiSingleDL import multi_single_dl_content_ls
