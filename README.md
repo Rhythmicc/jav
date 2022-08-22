@@ -1,5 +1,11 @@
 # Jav Utils | JAV 工具箱
 
+## 注意事项
+
+1. 本项目中的翻译引擎依赖于[QuickStart_Rhy](https://github.com/Rhythmicc/qs)中配置的默认翻译引擎，初次使用`qs`会自动引导配置；如果你不想使用`qs`，可以自行修改main.py中的translate函数。
+2. 终端内图片预览只支持系统配合[iTerm2](https://iterm2.com/)使用。
+3. **请勿在墙内宣传本项目!**
+
 ## 安装
 
 ### 安装依赖
@@ -14,15 +20,20 @@ pip3 install -r requirements.txt
 
 ### [将此项目注册为全局命令](https://rhythmlian.cn/2020/02/14/QuickProject/#%E5%B0%86Commander%E5%BA%94%E7%94%A8%E6%B3%A8%E5%86%8C%E4%B8%BA%E5%85%A8%E5%B1%80%E5%91%BD%E4%BB%A4)
 
-```sh
-Qpro register-global # 注册全局命令
-cd /usr/local/share/zsh/site-functions
-Qpro gen-zsh-comp # 生成zsh自动补全脚本
-# 以下操作仅支持Mac，并且需要配置fig: https://fig.io/
-cd ~/.fig/autocomplete # 如果这个路径不存在则尝试下一条
-# cd ~/.fig/user/autocomplete
-Qpro gen-fig-script
-```
+1. 第一次注册：设置`PYTHONPATH`环境变量
+  ```sh
+  export $PYTHONPATH=$PYTHONPATH:<jav文件夹的父目录>
+  ```
+2. 注册全局命令
+  ```sh
+  Qpro register-global # 注册全局命令
+  cd /usr/local/share/zsh/site-functions
+  Qpro gen-zsh-comp # 生成zsh自动补全脚本
+  # 以下操作仅支持Mac，并且需要配置fig: https://fig.io/
+  cd ~/.fig/autocomplete # 如果这个路径不存在则尝试下一条
+  # cd ~/.fig/user/autocomplete
+  Qpro gen-fig-script
+  ```
 
 ## 调用方式
 
@@ -57,8 +68,33 @@ Qpro gen-fig-script
 
    ![](https://cos.rhythmlian.cn/ImgBed/8666a497a636036147f586dddf25d5cf.png)
 
-## 注意事项
+## 开发者
 
-1. 本项目中的翻译引擎依赖于[QuickStart_Rhy](https://github.com/Rhythmicc/qs)中配置的默认翻译引擎，初次使用`qs`会自动引导配置；如果你不想使用`qs`，可以自行修改main.py中的translate函数。
-2. 终端内图片预览只支持系统配合[iTerm2](https://iterm2.com/)使用。
-3. **请勿在墙内宣传本项目!**
+1. 为了开发Qpro Commander应用，你需要创建一个文件夹比如`$HOME/QproCommanderAPP`，并为`$PYTHONPATH`环境变量增加一条该文件夹的路径信息。
+2. 增加其他自定义刮削方式，在`source`文件夹下新建一个`<站点名>.py`，结构如下:
+  ```py
+  from .. import *
+
+  source_name = 'jav321' # 站点名
+
+
+  @cover_func_wrapper
+  def _cover(designation: str):
+      """
+      下载多个封面
+
+      :param designations: 番号列表
+      :param set_covername: 设置封面图片名称
+      """
+      # ! 此函数返回番号的封面url即可，如果没有封面则 raise Exception("未找到封面")
+
+  @info_func_wrapper
+  def _info(designation: str) -> dict:
+      """
+      查询番号信息
+
+      :param designation: 番号
+      :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
+      """
+      # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
+  ```
