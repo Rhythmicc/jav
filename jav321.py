@@ -17,7 +17,6 @@ def _cover(designations: list, set_covername: str = ''):
         try:
             headers['Referer'] = img_baseUrl
             _ls = designation.lower().split('-')
-            QproDefaultConsole.print(QproInfoString, '链接: ', f'{img_baseUrl}/{_ls[0]}{"%05d" % int(_ls[1])}')
             html = requests.get(f'{img_baseUrl}/{_ls[0]}{"%05d" % int(_ls[1])}', headers=headers).text
             html = BeautifulSoup(html, 'lxml')
             img = html.find_all('div', class_='col-xs-12 col-md-12')[0].find('img').get('src')
@@ -62,7 +61,6 @@ def _info(designation: str):
         if not divs:
             QproDefaultConsole.print(divs)
             return None
-        QproDefaultConsole.print(QproInfoString, len(divs), '个番号图片信息')
         img = divs[0].find('img').get('src')
         imgs = [div.find('img').get('src') for div in divs[1:-1]]
         if img:
