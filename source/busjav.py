@@ -50,7 +50,7 @@ def _info(designation: str):
             img, title = img[0]
             img = img_baseUrl + img
             raw_info['img'] = img
-            raw_info['imgs'] = [img_baseUrl + i if not i.startswith('http') else i for i in imgs]
+            raw_info['imgs'] = [img_baseUrl + i if not i.startswith('http') else i for i in imgs if i]
             st.update('翻译标题')
             raw_info['title'] = translate(title)
         else:
@@ -71,4 +71,4 @@ def _web(designation: str):
     :param designation: 番号
     """
     from QuickStart_Rhy import open_url
-    open_url(f'{img_baseUrl}/{designation.upper()}/')
+    open_url([f'{img_baseUrl}/{designation.upper()}/'])
