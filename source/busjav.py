@@ -51,6 +51,7 @@ def _info(designation: str):
             img = img_baseUrl + img
             raw_info['img'] = img
             raw_info['imgs'] = [img_baseUrl + i if not i.startswith('http') else i for i in imgs if i]
+            raw_info['imgs'] = [i.strip() for i in raw_info['imgs']]
             st.update('翻译标题')
             raw_info['title'] = translate(title)
         else:
