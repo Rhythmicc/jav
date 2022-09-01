@@ -1,6 +1,6 @@
 const completionSpec: Fig.Spec = {
-    "name": "projects",
-    "description": "projects",
+    "name": "jav",
+    "description": "jav",
     "subcommands": [
         {
             "name": "--help",
@@ -29,7 +29,23 @@ const completionSpec: Fig.Spec = {
             "args": [
                 {
                     "name": "designation",
-                    "description": "<designation>"
+                    "description": "番号"
+                }
+            ],
+            "options": []
+        },
+        {
+            "name": "rank",
+            "description": "查看近期榜单",
+            "args": [
+                {
+                    "name": "--enable_translate",
+                    "description": "是否翻译",
+                    "isOptional": true,
+                    "args": {
+                        "name": "enable_translate",
+                        "description": "是否翻译"
+                    }
                 }
             ],
             "options": []

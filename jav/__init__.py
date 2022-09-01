@@ -7,6 +7,19 @@ from QuickStart_Rhy import requirePackage
 from QuickStart_Rhy.NetTools.NormalDL import normal_dl
 from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString, QproWarnString
 
+famous_actress = {
+    '三上悠亜',
+    "河北彩花",
+    "桃乃木かな",
+    'miru',
+    '相沢みなみ',
+    '涼森れむ',
+    '野々浦暖',
+    '明里つむぎ',
+    '葵つかさ',
+    '深田えいみ'
+}
+
 info_baseUrl = 'https://javtxt.com'
 
 nfo_template = """\
@@ -26,10 +39,15 @@ def translate(content):
     import time
     from QuickStart_Rhy.api import translate as _translate
     
-    content = _translate(content)
-    while content.startswith('[ERROR] 请求失败了'):
+    raw = content
+    try:
         content = _translate(content)
-        time.sleep(1)
+        while content.startswith('[ERROR] 请求失败了'):
+            content = _translate(content)
+            time.sleep(1)
+    except Exception as e:
+        QproDefaultConsole.print(QproErrorString, '翻译失败: {}'.format(repr(e)))
+        content = raw
     return content
 
 

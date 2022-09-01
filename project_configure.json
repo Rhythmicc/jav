@@ -1,12 +1,12 @@
 {
- "compile_tool": "",
- "compile_filename": "app.py",
- "executable_filename": "python3 -m jav.app",
- "input_file": "dist/input.txt",
- "template_root": "template/",
- "server_target": [
-  "",
-  "22"
- ],
- "enable_complete": true
+  "build": "",
+  "entry_point": "app.py",
+  "executable": "python3 -m jav.app",
+  "input_file": "dist/input.txt",
+  "template_root": "template/",
+  "server_target": [
+    "",
+    "22"
+  ],
+  "enable_complete": true
 }
