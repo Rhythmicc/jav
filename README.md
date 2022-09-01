@@ -61,8 +61,7 @@ Qpro gen-complete # 生成自动补全脚本在complete文件夹下，你需要�
 
 ## 开发者
 
-1. 为了开发Qpro Commander应用，你需要创建一个文件夹比如`$HOME/QproCommanderAPP`，并为`$PYTHONPATH`环境变量增加一条该文件夹的路径信息。
-2. 增加其他自定义刮削方式，在`source`文件夹下新建一个`<站点名>.py`，结构如下:
+增加其他自定义刮削方式，在`source`文件夹下新建一个`<站点名>.py`，结构如下:
   ```py
   from .. import *
   
