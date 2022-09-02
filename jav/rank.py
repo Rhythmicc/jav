@@ -48,7 +48,7 @@ def get_page(company: str, page: int):
             actress = _ls[2].text.strip()
 
         infos.append({
-            'designation': designation,
+            'designation': designation.upper(),
             'title': title,
             'date': date,
             'actress': actress
