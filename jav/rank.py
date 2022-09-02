@@ -1,3 +1,4 @@
+from time import time
 from . import info_baseUrl
 
 companies = {
@@ -34,6 +35,7 @@ def get_page(company: str, page: int):
             if r.status_code == 200:
                 break
             retry -= 1
+            time.sleep(1)
     if r.status_code != 200:
         QproDefaultConsole.print(QproErrorString, '获取榜单失败, 请检查网络连接!')
         return None
