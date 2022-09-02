@@ -15,6 +15,15 @@ class WishList:
     def add(self, item):
         if item['designation'] not in self.items:
             self.items[item['designation']] = item
+        else:
+            from .. import _ask
+            if _ask({
+                'type': 'confirm',
+                'name': 'confirm',
+                'message': f'已存在 {item["designation"]}，是否覆盖?',
+                'default': False
+            }):
+                self.items[item['designation']] = item
 
     def remove(self, item):
         self.items.pop(item['designation'])
