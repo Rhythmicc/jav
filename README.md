@@ -1,6 +1,6 @@
-# Jav Utils | `JAV 工具箱
+# Jav Utils | JAV 工具箱
 
-`## 注意事项
+## 注意事项
 
 1. 本项目中的翻译引擎依赖于[QuickStart_Rhy](https://github.com/Rhythmicc/qs)中配置的默认翻译引擎，初次使用`qs`会自动引导配置；如果你不想使用`qs`，可以自行修改main.py中的translate函数。
 2. 终端内图片预览只支持系统配合[iTerm2](https://iterm2.com/)使用。
