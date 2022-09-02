@@ -49,6 +49,12 @@ const completionSpec: Fig.Spec = {
                 }
             ],
             "options": []
+        },
+        {
+            "name": "wish",
+            "description": "心愿单",
+            "args": [],
+            "options": []
         }
     ]
 };

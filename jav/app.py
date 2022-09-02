@@ -1,9 +1,11 @@
 from .source.busjav import *
 from .source.busjav import _cover, _info, _web
 
+from .wish import WishList
 from QuickProject.Commander import Commander
 app = Commander(True)
 
+wish_list: WishList = None
 
 @app.command()
 def cover():
@@ -92,7 +94,13 @@ def info(designation: str):
                 QproDefaultConsole.print(QproInfoString, f'链接: {url}')
         else:
             app.real_call('web', designation)
-    
+        if designation in wish_list.get_list() and _ask({
+            'type': 'confirm',
+            'name': 'confirm',
+            'message': '是否从心愿单中删除?',
+            'default': True
+        }):
+            wish_list.remove(designation)
     if _ask({
         'type': 'confirm',
         'name': 'confirm',
@@ -132,10 +140,10 @@ def rank(enable_translate: bool = False):
     :param enable_translate: 是否翻译
     """
     from . import translate, famous_actress
-    from QuickProject import _ask
     from .rank import ask_company, get_page
     from QuickStart_Rhy.TuiTools.Table import qs_default_table
     from QuickStart_Rhy import cut_string
+    from QuickProject import _ask
 
     company = ask_company()
     if not company:
@@ -146,6 +154,8 @@ def rank(enable_translate: bool = False):
     while True:
         if page != pre_page:
             infos = get_page(company, page)
+            if not infos:
+                return
 
             if enable_translate:
                 with QproDefaultConsole.status('正在翻译标题...') as st:
@@ -172,17 +182,14 @@ def rank(enable_translate: bool = False):
         index = _ask({
             'type': 'input',
             'name': 'input',
-            'message': '输入序号查询详细信息(q 取消 | p 上一页 | n 下一页 | r 重新查询)',
-            'validate': lambda x: (x.isdigit() and 1 <= int(x) <= len(infos) and int(x) != 0) or x in ['q', 'p', 'n', 'r']
+            'message': f'输入序号查询详细信息(q 取消{" | p 上一页" if page > 1 else ""} | n 下一页 | r 重新查询)',
+            'validate': lambda x: (x.isdigit() and 1 <= int(x) <= len(infos) and int(x) != 0) or x in ['q', 'n', 'r'] + (['p'] if page > 1 else [])
         })
         if index == 'q':
             break
         elif index == 'p':
-            if page > 1:
-                page -= 1
-                QproDefaultConsole.clear()
-            else:
-                QproDefaultConsole.print(QproInfoString, '已经是第一页了')
+            page -= 1
+            QproDefaultConsole.clear()
         elif index == 'n':
             page += 1
             QproDefaultConsole.clear()
@@ -195,11 +202,65 @@ def rank(enable_translate: bool = False):
             info = infos[int(index) - 1]
             QproDefaultConsole.print(QproInfoString, info["designation"])
             app.real_call('info', info['designation'])
+            if _ask({
+                'type': 'confirm',
+                'name': 'confirm',
+                'message': '是否添加至心愿单?',
+                'default': True
+            }):
+                wish_list.add(info)
+                QproDefaultConsole.print(QproInfoString, '已添加至心愿单')
+            QproDefaultConsole.clear()
+
+
+@app.command()
+def wish():
+    """
+    心愿单
+    """
+    from QuickStart_Rhy.TuiTools.Table import qs_default_table
+    from QuickStart_Rhy import cut_string
+    from QuickProject import _ask
+
+    _ls = wish_list.get_list()
+    _ls_values = list(_ls.values())
+
+    while True:
+        table = qs_default_table(['排名', '番号', '发布日期', '演员', {'header': '标题', 'justify': 'left'}], title='心愿单\n')
+
+        for n, info in enumerate(_ls_values):
+            if info['designation'] in _ls:
+                table.add_row(
+                    f'[bold cyan]{n + 1}[/bold cyan]', 
+                    f'[bold magenta]{info["designation"]}[/bold magenta]', 
+                    info['date'][2:],
+                    f'[bold yellow]{info["actress"]}[/bold yellow]',
+                    ' '.join(cut_string(info['title'], QproDefaultConsole.width - 55))
+                )
+        QproDefaultConsole.print(table, justify='center')
+        QproDefaultConsole.print('-' * QproDefaultConsole.width)
+        index = _ask({
+            'type': 'input',
+            'name': 'input',
+            'message': '输入序号查询详细信息(q 退出)',
+            'validate': lambda x: (x.isdigit() and 1 <= int(x) <= len(_ls_values) and int(x) != 0) or x in ['q']
+        })
+        if index == 'q':
+            break
+        else:
+            info = _ls_values[int(index) - 1]
+            app.real_call('info', info['designation'])
             QproDefaultConsole.clear()
 
 
 def main():
-    app()
+    global wish_list
+    wish_list = WishList()
+    try:
+        app()
+    except:
+        pass
+    wish_list.store()
 
 
 if __name__ == "__main__":

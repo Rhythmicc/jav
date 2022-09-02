@@ -36,6 +36,7 @@ _jav_main() {
         info:'查询番号信息和链接'
         web:'通过浏览器获取番号信息'
         rank:'查看近期榜单'
+        wish:'心愿单'
     )
 
     _describe -t common-commands 'common commands' args && _ret=0

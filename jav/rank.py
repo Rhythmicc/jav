@@ -24,7 +24,19 @@ def get_page(company: str, page: int):
 
     url = companies[company]
     infos = []
-    r = requests.get(url + f'{page}')
+    retry = 3
+    
+    from . import QproDefaultConsole, QproErrorString
+
+    with QproDefaultConsole.status('正在获取榜单...'):
+        while retry:
+            r = requests.get(url + f'{page}')
+            if r.status_code == 200:
+                break
+            retry -= 1
+    if r.status_code != 200:
+        QproDefaultConsole.print(QproErrorString, '获取榜单失败, 请检查网络连接!')
+        return None
     soup = BeautifulSoup(r.text, 'html.parser')
     for info in soup.find_all('a', class_='work'):
         designation = info.find('h4', class_='work-id').text.strip()
