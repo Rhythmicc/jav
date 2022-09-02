@@ -47,6 +47,7 @@ Qpro gen-complete # 生成自动补全脚本在complete文件夹下，你需要�
 | info   | jav info <番号> | 查询番号信息+获取下载链接+保存视频信息 |
 | web | jav web <番号> | 从浏览器查询番号信息 |
 | rank | jav rank | 查询片商的近期榜单 |
+| wish | jav wish | 心愿单查看 |
 
 `info`命令保存的图像文件默认为`folder.<suffix>`，nfo文件默认为`<番号>.nfo`
 
