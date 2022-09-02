@@ -106,6 +106,7 @@ def info(designation: str):
         'message': '是否保存封面并导出nfo文件?',
         'default': False
     }):
+        from QuickStart_Rhy.NetTools.NormalDL import normal_dl
         img_filename = normal_dl(info['img'])
         suffix = img_filename.split('.')[-1]
         if not os.path.exists(f'folder.{suffix}'):
