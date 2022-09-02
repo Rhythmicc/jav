@@ -1,6 +1,6 @@
-# Jav Utils | JAV 工具箱
+# Jav Utils | `JAV 工具箱
 
-## 注意事项
+`## 注意事项
 
 1. 本项目中的翻译引擎依赖于[QuickStart_Rhy](https://github.com/Rhythmicc/qs)中配置的默认翻译引擎，初次使用`qs`会自动引导配置；如果你不想使用`qs`，可以自行修改main.py中的translate函数。
 2. 终端内图片预览只支持系统配合[iTerm2](https://iterm2.com/)使用。
@@ -14,7 +14,7 @@
 pip3 install -r requirements.txt
 ```
 
-### 在`app.py`中设置数据源
+### 在`jav/app.py`中设置数据源
 
 默认使用`jav321`作为数据源，因此文件前两行是`from .source.busjav ...`，如需切换成`jav321`则将`busjav`替换为`jav321`即可 (注意前面的`.source`不要删掉了)。
 
@@ -43,11 +43,11 @@ Qpro gen-complete # 生成自动补全脚本在complete文件夹下，你需要�
 
 | 子命令 | 调用方式                             | 描述                                         |
 | ------ | ------------------------------------ | -------------------------------------------- |
-| cover | jav cover | 遍历目录下的番号视频并为其自动下载封面 |
-| info   | jav info <番号> | 查询番号信息+获取下载链接+保存视频信息 |
-| web | jav web <番号> | 从浏览器查询番号信息 |
-| rank | jav rank | 查询片商的近期榜单 |
-| wish | jav wish | 心愿单查看 |
+| cover | `jav cover` | 遍历目录下的番号视频并为其自动下载封面 |
+| info   | `jav info <番号>` | 查询番号信息+获取下载链接+保存视频信息 |
+| web | `jav web <番号>` | 从浏览器查询番号信息 |
+| rank | `jav rank` | 查询片商的近期榜单 |
+| wish | `jav wish` | 心愿单查看 |
 
 `info`命令保存的图像文件默认为`folder.<suffix>`，nfo文件默认为`<番号>.nfo`
 
