@@ -59,6 +59,7 @@ Qpro gen-complete # 生成自动补全脚本在complete文件夹下，你需要�
    nfo 文件内容:
 
    ![](https://cos.rhythmlian.cn/ImgBed/8666a497a636036147f586dddf25d5cf.png)
+3. 通过`jav rank`查看片商近期榜单，可在预览后选择将其添加至心愿单；（心愿单中的内容仅会在选择下载后提示删除）。
 
 ## 开发者
 

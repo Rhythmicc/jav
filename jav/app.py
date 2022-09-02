@@ -202,7 +202,7 @@ def rank(enable_translate: bool = False):
             info = infos[int(index) - 1]
             QproDefaultConsole.print(QproInfoString, info["designation"])
             app.real_call('info', info['designation'])
-            if _ask({
+            if info['designation'] not in wish_list.get_list() and _ask({
                 'type': 'confirm',
                 'name': 'confirm',
                 'message': '是否添加至心愿单?',
