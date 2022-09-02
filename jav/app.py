@@ -58,8 +58,7 @@ def info(designation: str):
     if _ask({
         'type': 'confirm',
         'name': 'confirm',
-        'message': '是否下载?',
-        'default': True
+        'message': '是否下载?'
     }):    
         if _ask({
             'type': 'list',

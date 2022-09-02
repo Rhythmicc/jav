@@ -4,7 +4,6 @@ import re
 import requests
 from QuickStart_Rhy import headers
 from QuickStart_Rhy import requirePackage
-from QuickStart_Rhy.NetTools.NormalDL import normal_dl
 from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString, QproWarnString
 
 famous_actress = {
@@ -111,6 +110,7 @@ def cover_func_wrapper(func):
         :param set_covername: 设置封面图片名称
         """
         try:
+            from QuickStart_Rhy.NetTools.NormalDL import normal_dl
             failed = []
             for designation in designations:
                 try:
