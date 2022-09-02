@@ -16,7 +16,8 @@ famous_actress = {
     '野々浦暖',
     '明里つむぎ',
     '葵つかさ',
-    '深田えいみ'
+    '深田えいみ',
+    '七沢みあ'
 }
 
 info_baseUrl = 'https://javtxt.com'

@@ -100,26 +100,26 @@ def info(designation: str):
             'default': True
         }):
             wish_list.remove(designation)
-    if _ask({
-        'type': 'confirm',
-        'name': 'confirm',
-        'message': '是否保存封面并导出nfo文件?',
-        'default': False
-    }):
-        from QuickStart_Rhy.NetTools.NormalDL import normal_dl
-        img_filename = normal_dl(info['img'])
-        suffix = img_filename.split('.')[-1]
-        if not os.path.exists(f'folder.{suffix}'):
-            os.rename(img_filename, f'folder.{suffix}')
-            img_filename = f'folder.{suffix}'
-        QproDefaultConsole.print(QproInfoString, f'封面已保存为 "{img_filename}"')
-        if 'img' in info:
-            info.pop('img')
-        if 'imgs' in info:
-            info.pop('imgs')
-        with open(f'{designation}.nfo', 'w') as f:
-            f.write(nfo_template.format(**info))
-        QproDefaultConsole.print(QproInfoString, f'nfo文件已保存为 "{designation}.nfo"')
+    # if _ask({
+    #     'type': 'confirm',
+    #     'name': 'confirm',
+    #     'message': '是否保存封面并导出nfo文件?',
+    #     'default': False
+    # }):
+    #     from QuickStart_Rhy.NetTools.NormalDL import normal_dl
+    #     img_filename = normal_dl(info['img'])
+    #     suffix = img_filename.split('.')[-1]
+    #     if not os.path.exists(f'folder.{suffix}'):
+    #         os.rename(img_filename, f'folder.{suffix}')
+    #         img_filename = f'folder.{suffix}'
+    #     QproDefaultConsole.print(QproInfoString, f'封面已保存为 "{img_filename}"')
+    #     if 'img' in info:
+    #         info.pop('img')
+    #     if 'imgs' in info:
+    #         info.pop('imgs')
+    #     with open(f'{designation}.nfo', 'w') as f:
+    #         f.write(nfo_template.format(**info))
+    #     QproDefaultConsole.print(QproInfoString, f'nfo文件已保存为 "{designation}.nfo"')
 
 
 @app.command()
@@ -182,7 +182,7 @@ def rank(enable_translate: bool = False):
         index = _ask({
             'type': 'input',
             'name': 'input',
-            'message': f'输入序号查询详细信息(q 取消{" | p 上一页" if page > 1 else ""} | n 下一页 | r 重新查询)',
+            'message': f'输入序号查询详细信息 (q 取消{" | p 上一页" if page > 1 else ""} | n 下一页 | r 重新查询)',
             'validate': lambda x: (x.isdigit() and 1 <= int(x) <= len(infos) and int(x) != 0) or x in ['q', 'n', 'r'] + (['p'] if page > 1 else [])
         })
         if index == 'q':
@@ -242,7 +242,7 @@ def wish():
         index = _ask({
             'type': 'input',
             'name': 'input',
-            'message': '输入序号查询详细信息(q 退出)',
+            'message': '输入序号查询详细信息 (q 退出)',
             'validate': lambda x: (x.isdigit() and 1 <= int(x) <= len(_ls_values) and int(x) != 0) or x in ['q']
         })
         if index == 'q':
