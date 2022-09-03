@@ -6,7 +6,7 @@ from QuickStart_Rhy import headers
 from QuickStart_Rhy import requirePackage
 from QuickProject import QproDefaultConsole, QproErrorString, QproInfoString, QproWarnString
 
-famous_actress = {
+famous_actress = { # 在这里填写你喜欢的演员
     '三上悠亜',
     "河北彩花",
     "桃乃木かな",
@@ -19,6 +19,8 @@ famous_actress = {
     '深田えいみ',
     '七沢みあ'
 }
+
+terminal_font_size = 16 # 终端字体大小
 
 info_baseUrl = 'https://javtxt.com'
 
@@ -74,7 +76,7 @@ def imgsConcat(imgs_url: list):
     wide = is_wide()
     heights_len = 4 if wide else 3
     with QproDefaultConsole.status('拼接图片中') as st:
-        one_width = QproDefaultConsole.width // heights_len * 16
+        one_width = QproDefaultConsole.width // heights_len * terminal_font_size
         imgs = [i.resize((one_width, int(one_width * i.size[1] / i.size[0]))) for i in imgs]
         imgs = sorted(imgs, key=lambda i: -i.size[0] * i.size[1])
         heights = [0] * heights_len
@@ -85,7 +87,7 @@ def imgsConcat(imgs_url: list):
             while max(heights) > one_width * heights_len:
                 heights_len += 1
                 heights = [0] * heights_len
-                one_width = QproDefaultConsole.width // heights_len * 16
+                one_width = QproDefaultConsole.width // heights_len * terminal_font_size
                 for i in imgs:
                     heights[heights.index(min(heights))] += i.size[1]
         result = Image.new('RGBA', (one_width * heights_len, max(heights)))
