@@ -260,10 +260,12 @@ def main():
     global wish_list
     wish_list = WishList()
     try:
+        QproDefaultConsole.print("正在加载...")
         app()
     except:
-        pass
-    wish_list.store()
+        QproDefaultConsole.print_exception()
+    finally:
+        wish_list.store()
 
 
 if __name__ == "__main__":

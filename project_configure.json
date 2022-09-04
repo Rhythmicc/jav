@@ -9,7 +9,7 @@
       "user": "lianhaocheng",
       "host": "localhost",
       "port": 22,
-      "path": "/Users/lianhaocheng/.local/QuickProject/QproGlobalCommands/"
+      "path": "/opt/homebrew/lib/python3.10/site-packages/"
     }
   ],
   "enable_complete": true
