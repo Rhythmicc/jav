@@ -1,10 +1,8 @@
-from .source.busjav import *
-from .source.busjav import _cover, _info, _web
-
+from . import *
 from .wish import WishList
 from QuickProject.Commander import Commander
-app = Commander(True)
 
+app = Commander(True)
 wish_list: WishList = None
 
 @app.command()
@@ -12,6 +10,7 @@ def cover():
     """
     下载所有的封面
     """
+    _cover = requirePackage(f'.sites.{site}', '_cover')
     import os
     
     for rt, _, files in os.walk('.'):
@@ -33,6 +32,8 @@ def info(designation: str):
 
     :param designation: 番号
     """
+    _info = requirePackage(f'.sites.{site}', '_info')
+
     designation = designation.upper()
     info = _info(designation)
     if not info:
@@ -59,7 +60,8 @@ def info(designation: str):
         'type': 'confirm',
         'name': 'confirm',
         'message': '是否下载?'
-    }):    
+    }):
+        source_name = requirePackage(f'.sites.{site}', 'source_name')
         if _ask({
             'type': 'list',
             'name': 'list',
@@ -129,6 +131,7 @@ def web(designation: str):
 
     :param designation: 番号
     """
+    _web = requirePackage(f'.sites.{site}', '_web')
     _web(designation)
 
 
