@@ -25,7 +25,7 @@ setup(
     install_requires=['Qpro', 'QuickStart_Rhy', 'pyperclip', 'requests'],
     entry_points={
         'console_scripts': [
-            'jav = jav.__main__:main',
+            'jav = jav.main:main',
         ]
     },
 )
