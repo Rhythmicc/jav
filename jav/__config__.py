@@ -56,7 +56,6 @@ def init_config():
 
 
 class JavConfig:
-
     def __init__(self) -> None:
         if not os.path.exists(config_path):
             init_config()

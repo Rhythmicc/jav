@@ -1,6 +1,8 @@
 import os
 import pickle
-from .. import wish_list_path
+from .. import config
+
+wish_list_path = config.select('wish_list_path')
 
 class WishList:
     def __init__(self):

@@ -14,7 +14,6 @@ site = config.select('site')
 disable_translate = config.select('disable_translate')
 famous_actress = config.select('famous_actress')
 terminal_font_size = int(config.select('terminal_font_size'))
-wish_list_path = config.select('wish_list_path')
 
 info_baseUrl = 'https://javtxt.com'
 
