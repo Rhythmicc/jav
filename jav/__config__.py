@@ -60,7 +60,7 @@ class JavConfig:
     def __init__(self) -> None:
         if not os.path.exists(config_path):
             init_config()
-        with open(os.path.join(user_root, '.javrc'), 'r') as f:
+        with open(config_path, 'r') as f:
             self.config = json.load(f)
 
     def select(self, key):
