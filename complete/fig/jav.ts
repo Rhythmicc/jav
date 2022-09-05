@@ -55,6 +55,12 @@ const completionSpec: Fig.Spec = {
             "description": "心愿单",
             "args": [],
             "options": []
+        },
+        {
+            "name": "update",
+            "description": "更新jav工具",
+            "args": [],
+            "options": []
         }
     ]
 };

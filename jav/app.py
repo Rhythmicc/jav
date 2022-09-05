@@ -271,7 +271,6 @@ def main():
     global wish_list
     wish_list = WishList()
     try:
-        QproDefaultConsole.print("正在加载...")
         app()
     except:
         QproDefaultConsole.print_exception()
