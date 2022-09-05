@@ -256,6 +256,17 @@ def wish():
             QproDefaultConsole.clear()
 
 
+@app.command()
+def update():
+    """
+    更新jav工具
+    """
+    from QuickProject import user_pip
+    with QproDefaultConsole.status('正在更新...') as st:
+        external_exec(f'{user_pip} install git+https://github.com/Rhythmicc/jav.git -U', True)
+    QproDefaultConsole.print(QproInfoString, '更新完成')
+
+
 def main():
     global wish_list
     wish_list = WishList()
