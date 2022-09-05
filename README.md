@@ -23,8 +23,11 @@ PS: 如果你曾经安装过jav，那么请在`QproGlobalDir`中将相关配置�
 | web | `jav web <番号>` | 从浏览器查询番号信息 |
 | rank | `jav rank` | 查询片商的近期榜单 |
 | wish | `jav wish` | 心愿单查看 |
+| update | `jav update` | 更新jav |
 
 `info`命令保存的图像文件默认为`folder.<suffix>`，nfo文件默认为`<番号>.nfo`
+
+初次运行`jav`会自动引导配置。
 
 ## Demo
 
@@ -38,30 +41,36 @@ PS: 如果你曾经安装过jav，那么请在`QproGlobalDir`中将相关配置�
 
 ## 开发者
 
-增加其他自定义刮削方式，在`site`文件夹下新建一个`<站点名>.py`，结构如下:
-  ```py
-  from .. import *
-  
-  source_name = '' # 站点名
+1. fork本项目。
 
+2. 增加其他自定义刮削方式，在`site`文件夹下新建一个`<站点名>.py`，结构如下:
 
-  @cover_func_wrapper
-  def _cover(designation: str):
-      """
-      下载多个封面
+   ```python
+     from .. import *
+     
+     source_name = '' # 站点名
+   
+   
+     @cover_func_wrapper
+     def _cover(designation: str):
+         """
+         下载多个封面
+   
+         :param designations: 番号列表
+         :param set_covername: 设置封面图片名称
+         """
+         # ! 此函数返回番号的封面url即可，如果没有封面则 raise Exception("未找到封面")
+   
+     @info_func_wrapper
+     def _info(designation: str) -> dict:
+         """
+         查询番号信息
+   
+         :param designation: 番号
+         :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
+         """
+         # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
+   ```
 
-      :param designations: 番号列表
-      :param set_covername: 设置封面图片名称
-      """
-      # ! 此函数返回番号的封面url即可，如果没有封面则 raise Exception("未找到封面")
+3. 提PR。
 
-  @info_func_wrapper
-  def _info(designation: str) -> dict:
-      """
-      查询番号信息
-
-      :param designation: 番号
-      :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
-      """
-      # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
-  ```
