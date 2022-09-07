@@ -3,9 +3,11 @@ from . import info_baseUrl
 
 companies = {
     'S1 NO.1 STYLE': f'{info_baseUrl}/studio/763?page=',
-    'IDEA POCKET': f'{info_baseUrl}/studio/109?page=',
     'Prestige': f'{info_baseUrl}/studio/671?page=',
+    'SOD Create': f'{info_baseUrl}/studio/1334?page=',
+    'Faleno': f'{info_baseUrl}/studio/4411?page=',
     'MOODYZ': f'{info_baseUrl}/studio/294?page=',
+    'IDEA POCKET': f'{info_baseUrl}/studio/109?page=',
 }
 
 
