@@ -3,7 +3,7 @@ from .wish import WishList
 from QuickProject.Commander import Commander
 
 app = Commander(True)
-wish_list: WishList = None
+wish_list = WishList()
 
 @app.command()
 def cover():
@@ -35,6 +35,7 @@ def info(designation: str):
     _info = requirePackage(f'.sites.{site}', '_info')
 
     designation = designation.upper()
+    QproDefaultConsole.clear()
     info = _info(designation)
     if not info:
         return
@@ -214,6 +215,7 @@ def rank(enable_translate: bool = False):
                 wish_list.add(info)
                 QproDefaultConsole.print(QproInfoString, '已添加至心愿单')
             QproDefaultConsole.clear()
+    QproDefaultConsole.clear()
 
 
 @app.command()
@@ -225,21 +227,20 @@ def wish():
     from QuickStart_Rhy import cut_string
     from QuickProject import _ask
 
-    _ls = wish_list.get_list()
-    _ls_values = list(_ls.values())
-
     while True:
+        _ls = wish_list.get_list()
+        _ls_values = list(_ls.values())
+
         table = qs_default_table(['排名', '番号', '发布日期', '演员', {'header': '标题', 'justify': 'left'}], title='心愿单\n')
 
         for n, info in enumerate(_ls_values):
-            if info['designation'] in _ls:
-                table.add_row(
-                    f'[bold cyan]{n + 1}[/bold cyan]', 
-                    f'[bold magenta]{info["designation"]}[/bold magenta]', 
-                    info['date'][2:],
-                    f'[bold yellow]{info["actress"]}[/bold yellow]',
-                    ' '.join(cut_string(info['title'], QproDefaultConsole.width - 55))
-                )
+            table.add_row(
+                f'[bold cyan]{n + 1}[/bold cyan]', 
+                f'[bold magenta]{info["designation"]}[/bold magenta]', 
+                info['date'][2:],
+                f'[bold yellow]{info["actress"]}[/bold yellow]',
+                ' '.join(cut_string(info['title'], QproDefaultConsole.width - 55))
+            )
         QproDefaultConsole.print(table, justify='center')
         QproDefaultConsole.print('-' * QproDefaultConsole.width)
         index = _ask({
@@ -268,14 +269,11 @@ def update():
 
 
 def main():
-    global wish_list
-    wish_list = WishList()
     try:
         app()
     except:
         QproDefaultConsole.print_exception()
-    finally:
-        wish_list.store()
+    wish_list.store()
 
 
 if __name__ == "__main__":
