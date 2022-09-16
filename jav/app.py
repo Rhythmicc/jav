@@ -271,6 +271,7 @@ def update():
 def main():
     try:
         app()
+        QproDefaultConsole.clear()
     except:
         QproDefaultConsole.print_exception()
     wish_list.store()

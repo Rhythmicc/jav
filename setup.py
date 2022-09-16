@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
-VERSION = '0.0.4'
+VERSION = '0.0.5'
 
 setup(
     name='jav',
@@ -19,13 +19,11 @@ setup(
     author='RhythmLian',
     url="https://github.com/Rhythmicc/jav",
     license='MIT',
-    packages=find_packages(),
+    packages=find_packages() + ['jav.sites'],
     include_package_data=True,
     zip_safe=True,
     install_requires=['Qpro', 'QuickStart_Rhy', 'pyperclip', 'requests'],
-    entry_points={
-        'console_scripts': [
-            'jav = jav.app:main',
-        ]
-    },
+    entry_points={'console_scripts': [
+        'jav = jav.app:main',
+    ]},
 )
