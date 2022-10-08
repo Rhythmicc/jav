@@ -14,3 +14,4 @@ def backup_img(designation: str):
         f"https://img2.javmost.cx/file_image/{designation.upper()}-Uncensored-Leak.jpg"
     )[0]:
         return f"https://img2.javmost.cx/file_image/{designation.upper()}-Uncensored-Leak.jpg"
+    return ""

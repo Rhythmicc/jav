@@ -237,6 +237,8 @@ def info_func_wrapper(func):
                 QproDefaultConsole.print(
                     QproErrorString, "番号信息获取失败: {}, 启用备用刮削器。".format(designation)
                 )
+                from .sites import backup_img
+
                 raw_info = {
                     "img": backup_img(designation),
                     "imgs": [],
