@@ -14,8 +14,6 @@ from QuickProject import (
     user_pip,
 )
 
-from jav.sites import backup_img
-
 from .__config__ import JavConfig
 
 config = JavConfig()
