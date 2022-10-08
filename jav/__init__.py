@@ -14,6 +14,8 @@ from QuickProject import (
     user_pip,
 )
 
+from jav.sites import backup_img
+
 from .__config__ import JavConfig
 
 config = JavConfig()
@@ -194,6 +196,10 @@ def cover_func_wrapper(func):
             for designation in designations:
                 try:
                     img = func(designation, **kwargs)
+                    from .sites import get_fileinfo, backup_img
+
+                    if not get_fileinfo(img)[0]:
+                        img = backup_img(designation)
                     img = normal_dl(img)
                     suffix = img.split(".")[-1]
                     filename = (
@@ -231,9 +237,13 @@ def info_func_wrapper(func):
             raw_info = func(designation, **kwargs)
             if not raw_info:
                 QproDefaultConsole.print(
-                    QproErrorString, "番号信息获取失败: {}".format(designation)
+                    QproErrorString, "番号信息获取失败: {}, 启用备用刮削器。".format(designation)
                 )
-                return
+                raw_info = {
+                    "img": backup_img(designation),
+                    "imgs": [],
+                    "title": designation,
+                }
             with QproDefaultConsole.status("查询番号信息") as st:
                 from bs4 import BeautifulSoup
 

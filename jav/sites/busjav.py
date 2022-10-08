@@ -1,7 +1,7 @@
 from .. import *
 
-img_baseUrl = 'https://www.busjav.fun'
-source_name = 'busjav'
+img_baseUrl = "https://www.busjav.fun"
+source_name = "busjav"
 
 
 @cover_func_wrapper
@@ -13,19 +13,19 @@ def _cover(designation: str):
     :param set_covername: 设置封面图片名称
     """
     # ! 此函数返回番号的封面url即可，如果没有封面则 raise Exception("未找到封面")
-    headers['Referer'] = img_baseUrl
-    html = requests.get(f'{img_baseUrl}/{designation.upper()}/', headers=headers).text
+    headers["Referer"] = img_baseUrl
+    html = requests.get(f"{img_baseUrl}/{designation.upper()}/", headers=headers).text
     img = re.findall('<a.*?bigImage.*?src="(.*?)"', html)
     if img:
         img = img_baseUrl + img[0]
     else:
-        QproDefaultConsole.print(QproErrorString, f'{designation} 未找到!')
+        QproDefaultConsole.print(QproErrorString, f"{designation} 未找到!")
         raise Exception("未找到封面")
-    if img == '${element.cover}':
-        QproDefaultConsole.print(QproErrorString, f'{designation} 未找到!')
+    if img == "${element.cover}":
+        QproDefaultConsole.print(QproErrorString, f"{designation} 未找到!")
         raise Exception("未找到封面")
-    if img.startswith('//'):
-        img = f'http:{img}'
+    if img.startswith("//"):
+        img = f"http:{img}"
     return img
 
 
@@ -38,29 +38,34 @@ def _info(designation: str):
     :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
     """
     # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
-    with QproDefaultConsole.status('查询番号图片信息') as st:
+    with QproDefaultConsole.status("查询番号图片信息") as st:
         raw_info = {}
-        raw_info['designation'] = designation
-        headers['Referer'] = img_baseUrl
-        html = requests.get(f'{img_baseUrl}/{designation.upper()}/', headers=headers).text
-        st.update('解析番号图片信息')
+        raw_info["designation"] = designation
+        headers["Referer"] = img_baseUrl
+        html = requests.get(
+            f"{img_baseUrl}/{designation.upper()}/", headers=headers
+        ).text
+        st.update("解析番号图片信息")
         img = re.findall('<a.*?bigImage.*?src="(.*?)".*?title="(.*?)"', html)
         imgs = re.findall('<a.*?sample-box.*?href="(.*?)"', html)
         if img:
             img, title = img[0]
             img = img_baseUrl + img
-            raw_info['img'] = img
-            raw_info['imgs'] = [img_baseUrl + i if not i.startswith('http') else i for i in imgs if i]
-            raw_info['imgs'] = [i.strip() for i in raw_info['imgs']]
-            st.update('翻译标题')
-            raw_info['title'] = translate(title)
+            raw_info["img"] = img
+            raw_info["imgs"] = [
+                img_baseUrl + i if not i.startswith("http") else i for i in imgs if i
+            ]
+            raw_info["imgs"] = [i.strip() for i in raw_info["imgs"]]
+            st.update("翻译标题")
+            raw_info["title"] = translate(title)
         else:
             return
-        if img == '${element.cover}':
+        if img == "${element.cover}":
             return
-        if img.startswith('//'):
-            img = f'http:{img}'
+        if img.startswith("//"):
+            img = f"http:{img}"
         from QuickStart_Rhy.ImageTools.ImagePreview import image_preview
+
         image_preview(img, qs_console_status=st)
     return raw_info
 
@@ -68,8 +73,9 @@ def _info(designation: str):
 def _web(designation: str):
     """
     查询番号网页信息
-    
+
     :param designation: 番号
     """
     from QuickStart_Rhy import open_url
-    open_url([f'{img_baseUrl}/{designation.upper()}/'])
+
+    open_url([f"{img_baseUrl}/{designation.upper()}/"])
