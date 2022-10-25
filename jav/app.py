@@ -49,10 +49,10 @@ def info(designation: str):
     if _ask(
         {"type": "confirm", "name": "confirm", "message": f"是否展示样品图片?", "default": True}
     ):
-        from QuickStart_Rhy.ImageTools.ImagePreview import image_preview
-
         img_concated = imgsConcat(info["imgs"])
-        image_preview(img_concated)
+        requirePackage("QuickStart_Rhy.ImageTools.ImagePreview", "image_preview")(
+            img_concated
+        )
         if _ask(
             {
                 "type": "confirm",

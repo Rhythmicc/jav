@@ -244,6 +244,9 @@ def info_func_wrapper(func):
                     "imgs": [],
                     "title": designation,
                 }
+            requirePackage("QuickStart_Rhy.ImageTools.ImagePreview", "image_preview")(
+                raw_info["img"]
+            )
             with QproDefaultConsole.status("查询番号信息") as st:
                 from bs4 import BeautifulSoup
 

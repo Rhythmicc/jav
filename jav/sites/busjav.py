@@ -38,7 +38,7 @@ def _info(designation: str):
     :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
     """
     # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
-    with QproDefaultConsole.status("查询番号图片信息") as st:
+    with QproDefaultConsole.status("查询番号信息") as st:
         raw_info = {}
         raw_info["designation"] = designation
         headers["Referer"] = img_baseUrl
@@ -48,6 +48,10 @@ def _info(designation: str):
         st.update("解析番号图片信息")
         img = re.findall('<a.*?bigImage.*?src="(.*?)".*?title="(.*?)"', html)
         imgs = re.findall('<a.*?sample-box.*?href="(.*?)"', html)
+        if img == "${element.cover}":
+            return None
+        if img.startswith("//"):
+            img = f"http:{img}"
         if img:
             img, title = img[0]
             img = img_baseUrl + img
@@ -60,13 +64,6 @@ def _info(designation: str):
             raw_info["title"] = translate(title)
         else:
             return
-        if img == "${element.cover}":
-            return
-        if img.startswith("//"):
-            img = f"http:{img}"
-        from QuickStart_Rhy.ImageTools.ImagePreview import image_preview
-
-        image_preview(img, qs_console_status=st)
     return raw_info
 
 
