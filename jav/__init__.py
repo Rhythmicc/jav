@@ -275,8 +275,8 @@ def info_func_wrapper(func):
                     title=raw_info["title"] + "\n",
                 )
 
-                st.update("翻译番号信息")
-                content = translate(content)
+                # st.update("翻译番号信息")
+                # content = translate(content)
                 st.update("准备展示")
                 table.add_row(
                     "🗒️  简介",
