@@ -72,3 +72,15 @@ def _info(designation: str):
         _res["img"] = maintain_content.find("img")["src"]
         _res["imgs"] = [i["src"] for i in maintain_content.find_all("img")[1:]]
         return _res
+
+
+def _web(designation: str):
+    """
+    打开番号网页
+
+    :param designation: 番号
+    """
+    from QuickStart_Rhy import open_url
+
+    designation = designation.upper()
+    open_url([f"https://jav.guru/?s={designation}"])

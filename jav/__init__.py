@@ -18,6 +18,7 @@ from .__config__ import JavConfig
 
 config = JavConfig()
 site = config.select("site")
+sites = config.select("sites")
 disable_translate = config.select("disable_translate")
 famous_actress = config.select("famous_actress")
 terminal_font_size = int(config.select("terminal_font_size"))

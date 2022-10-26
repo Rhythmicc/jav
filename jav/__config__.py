@@ -8,8 +8,8 @@ problems = {
     "site": {
         "type": "list",
         "name": "list",
-        "message": "请选择一个爬取网站",
-        "choices": ["busjav", "jav321"],
+        "message": "请选择一个默认数据源",
+        "choices": ["busjav", "jav321", "guru"],
         "default": "busjav",
     },
     "terminal_font_size": {
@@ -33,6 +33,18 @@ problems = {
 }
 
 
+def ask_sites(site: str):
+    return _ask(
+        {
+            "type": "list",
+            "name": "list",
+            "message": f"请为 '{site}' 选择一个数据源",
+            "choices": ["busjav", "jav321", "guru"],
+            "default": "busjav",
+        }
+    )
+
+
 def init_config():
     """
     初始化配置
@@ -46,6 +58,14 @@ def init_config():
         json.dump(
             {
                 "site": _ask(problems["site"]),
+                "sites": {
+                    "S1 NO.1 STYLE": ask_sites("S1 NO.1 STYLE"),
+                    "Prestige": ask_sites("Prestige"),
+                    "SOD Create": ask_sites("SOD Create"),
+                    "Faleno": ask_sites("Faleno"),
+                    "MOODYZ": ask_sites("MOODYZ"),
+                    "IDEA POCKET": ask_sites("IDEA POCKET"),
+                },
                 "terminal_font_size": _ask(problems["terminal_font_size"]),
                 "famous_actress": [
                     "三上悠亜",
@@ -77,8 +97,22 @@ class JavConfig:
             self.config = json.load(f)
 
     def select(self, key):
-        if key not in self.config and key in problems:
-            self.update(key, _ask(problems[key]))
+        if key not in self.config:
+            if key in problems:
+                self.update(key, _ask(problems[key]))
+            elif key == "sites":
+                self.update(
+                    key,
+                    {
+                        "S1 NO.1 STYLE": ask_sites("S1 NO.1 STYLE"),
+                        "Prestige": ask_sites("Prestige"),
+                        "SOD Create": ask_sites("SOD Create"),
+                        "Faleno": ask_sites("Faleno"),
+                        "MOODYZ": ask_sites("MOODYZ"),
+                        "IDEA POCKET": ask_sites("IDEA POCKET"),
+                    },
+                )
+
         return self.config.get(key, None)
 
     def update(self, key, value):

@@ -31,7 +31,7 @@ def cover():
 
 
 @app.command()
-def info(designation: str):
+def info(designation: str, company: str = ""):
     """
     查询番号信息和链接
 
@@ -114,26 +114,6 @@ def info(designation: str):
             }
         ):
             wish_list.remove(designation)
-    # if _ask({
-    #     'type': 'confirm',
-    #     'name': 'confirm',
-    #     'message': '是否保存封面并导出nfo文件?',
-    #     'default': False
-    # }):
-    #     from QuickStart_Rhy.NetTools.NormalDL import normal_dl
-    #     img_filename = normal_dl(info['img'])
-    #     suffix = img_filename.split('.')[-1]
-    #     if not os.path.exists(f'folder.{suffix}'):
-    #         os.rename(img_filename, f'folder.{suffix}')
-    #         img_filename = f'folder.{suffix}'
-    #     QproDefaultConsole.print(QproInfoString, f'封面已保存为 "{img_filename}"')
-    #     if 'img' in info:
-    #         info.pop('img')
-    #     if 'imgs' in info:
-    #         info.pop('imgs')
-    #     with open(f'{designation}.nfo', 'w') as f:
-    #         f.write(nfo_template.format(**info))
-    #     QproDefaultConsole.print(QproInfoString, f'nfo文件已保存为 "{designation}.nfo"')
 
 
 @app.command()
