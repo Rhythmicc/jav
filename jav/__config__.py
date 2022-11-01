@@ -7,26 +7,22 @@ config_path = os.path.join(user_root, ".jav", "config.json")
 problems = {
     "site": {
         "type": "list",
-        "name": "list",
         "message": "请选择一个默认数据源",
         "choices": ["busjav", "jav321", "guru"],
         "default": "busjav",
     },
     "terminal_font_size": {
         "type": "input",
-        "name": "terminal_font_size",
         "message": "请输入终端字体大小(默认为 16):",
         "default": "16",
     },
     "wish_list_path": {
         "type": "input",
-        "name": "wish_list_path",
         "message": "请输入心愿单路径(默认为 ~/.jav/wish_list.json):",
         "default": os.path.join(user_root, ".jav", "wish_list.json"),
     },
     "disable_translate": {
         "type": "confirm",
-        "name": "disable_translate",
         "message": "是否禁用翻译(默认为否):",
         "default": False,
     },
@@ -79,6 +75,7 @@ def init_config():
                     "葵つかさ",
                     "深田えいみ",
                     "七沢みあ",
+                    "香水じゅん",
                 ],
                 "wish_list_path": _ask(problems["wish_list_path"]),
                 "disable_translate": _ask(problems["disable_translate"]),
