@@ -50,7 +50,15 @@ def get_page(company: str, page: int):
         QproDefaultConsole.print(QproErrorString, "获取榜单失败, 请检查网络连接!")
         return None
     soup = BeautifulSoup(r.text, "html.parser")
-    for info in soup.find_all("a", class_="work"):
+
+    from QuickStart_Rhy.TuiTools.Bar import NormalProgressBar
+
+    ls = soup.find_all("a", class_="work")
+    progress, task_id = NormalProgressBar("解析与翻译", len(ls))
+    progress.start()
+    progress.start_task(task_id)
+
+    for info in ls:
         designation = info.find("h4", class_="work-id").text.strip()
         title = info.find("h4", class_="work-title").text.strip()
         _ls = info.find_all("span")
@@ -67,4 +75,11 @@ def get_page(company: str, page: int):
                 "actress": actress,
             }
         )
+        time.sleep(0.2)
+        progress.advance(task_id)
+    progress.stop_task(task_id)
+    progress.stop()
+
+    QproDefaultConsole.clear()
+
     return infos
