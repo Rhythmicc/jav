@@ -3,12 +3,14 @@ import json
 from QuickProject import user_root, _ask
 
 config_path = os.path.join(user_root, ".jav", "config.json")
+sites = ["busjav", "jav321", "guru", "javgg"]
+
 
 problems = {
     "site": {
         "type": "list",
         "message": "请选择一个默认数据源",
-        "choices": ["busjav", "jav321", "guru"],
+        "choices": sites,
         "default": "busjav",
     },
     "terminal_font_size": {
@@ -26,6 +28,7 @@ problems = {
         "message": "是否禁用翻译(默认为否):",
         "default": False,
     },
+    "remote_url": {"type": "input", "message": "请输入远程浏览器URL (无则跳过):"},
 }
 
 
@@ -35,7 +38,7 @@ def ask_sites(site: str):
             "type": "list",
             "name": "list",
             "message": f"请为 '{site}' 选择一个数据源",
-            "choices": ["busjav", "jav321", "guru"],
+            "choices": sites,
             "default": "busjav",
         }
     )
@@ -79,6 +82,7 @@ def init_config():
                 ],
                 "wish_list_path": _ask(problems["wish_list_path"]),
                 "disable_translate": _ask(problems["disable_translate"]),
+                "remote_url": _ask(problems["remote_url"]),
             },
             f,
             ensure_ascii=False,
