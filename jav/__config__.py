@@ -3,7 +3,7 @@ import json
 from QuickProject import user_root, _ask
 
 config_path = os.path.join(user_root, ".jav", "config.json")
-sites = ["busjav", "jav321", "guru", "javgg"]
+sites = ["busjav", "jav321", "guru", "javgg", "javdb"]
 
 
 problems = {
