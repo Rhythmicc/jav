@@ -2,6 +2,7 @@ from .. import *
 
 img_baseUrl = "https://www.busjav.fun"
 source_name = "busjav"
+using_selenium = False
 
 
 @cover_func_wrapper

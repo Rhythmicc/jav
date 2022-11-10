@@ -4,6 +4,7 @@ from QuickProject.Commander import Commander
 
 app = Commander(True)
 wish_list = WishList()
+driver = None
 
 
 @app.command()
@@ -37,11 +38,25 @@ def info(designation: str, company: str = ""):
 
     :param designation: 番号
     """
+    global driver
+    _flag = requirePackage(f".sites.{site}", "using_selenium")
     _info = requirePackage(f".sites.{site}", "_info")
+
+    if _flag and not driver:
+        from selenium import webdriver
+
+        remote_url = config.select("remote_url")
+        if not remote_url:
+            raise Exception("未设置远程地址")
+        with QproDefaultConsole.status("正在打开远程浏览器"):
+            driver = webdriver.Remote(
+                command_executor=remote_url,
+                desired_capabilities=webdriver.DesiredCapabilities.CHROME,
+            )
 
     designation = designation.upper()
     QproDefaultConsole.clear()
-    info = _info(designation)
+    info = _info(designation, driver=driver) if _flag else _info(designation)
     if not info:
         return
     from QuickProject import _ask
@@ -284,11 +299,18 @@ def update():
 
 
 def main():
+    global driver
     try:
         app()
         QproDefaultConsole.clear()
     except:
         QproDefaultConsole.print_exception()
+        if driver:
+            driver.quit()
+            driver = None
+    finally:
+        if driver:
+            driver.quit()
     wish_list.store()
 
 

@@ -1,6 +1,7 @@
 from .. import *
 
 source_name = "guru"
+using_selenium = False
 
 
 @cover_func_wrapper

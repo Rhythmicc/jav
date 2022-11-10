@@ -2,10 +2,11 @@ from .. import *
 
 img_baseUrl = "https://javgg.net/jav/"
 source_name = "javgg"
+using_selenium = True
 
 
 @cover_func_wrapper
-def _cover(designation: str):
+def _cover(designation: str, driver=None):
     """
     下载多个封面
 
@@ -18,21 +19,27 @@ def _cover(designation: str):
     if not remote_url:
         raise Exception("未设置远程地址")
 
+    driver_flag = True if driver else False
+
     from selenium import webdriver
     from selenium.webdriver.common.by import By
 
-    driver = webdriver.Remote(
-        command_executor=remote_url,
-        desired_capabilities=webdriver.DesiredCapabilities.CHROME,
-    )
+    if not driver_flag:
+        from selenium import webdriver
+
+        driver = webdriver.Remote(
+            command_executor=remote_url,
+            desired_capabilities=webdriver.DesiredCapabilities.CHROME,
+        )
     driver.get(f"{img_baseUrl}{designation.upper()}/")
     img = driver.find_element(By.CLASS_NAME, "cover").get_attribute("src")
-    driver.quit()
+    if not driver_flag:
+        driver.quit()
     return img
 
 
 @info_func_wrapper
-def _info(designation: str):
+def _info(designation: str, driver=None):
     """
     查询番号信息
 
@@ -45,15 +52,19 @@ def _info(designation: str):
     if not remote_url:
         raise Exception("未设置远程地址")
 
-    from selenium import webdriver
     from selenium.webdriver.common.by import By
+
+    driver_flag = True if driver else False
 
     with QproDefaultConsole.status("正在打开远程浏览器") as st:
         raw_info = {}
-        driver = webdriver.Remote(
-            command_executor=remote_url,
-            desired_capabilities=webdriver.DesiredCapabilities.CHROME,
-        )
+        if not driver_flag:
+            from selenium import webdriver
+
+            driver = webdriver.Remote(
+                command_executor=remote_url,
+                desired_capabilities=webdriver.DesiredCapabilities.CHROME,
+            )
         st.update("正在打开网页")
         driver.get(f"{img_baseUrl}{designation.lower()}/")
         st.update("正在获取信息")
@@ -66,7 +77,8 @@ def _info(designation: str):
         ]
         raw_info["title"] = info.text.splitlines()[0]
 
-        driver.quit()
+        if not driver_flag:
+            driver.quit()
         return raw_info
 
 

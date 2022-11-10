@@ -11,6 +11,9 @@ companies = {
 }
 
 
+cache = {}
+
+
 def ask_company():
     from QuickProject import _ask
 
@@ -25,6 +28,11 @@ def ask_company():
 
 
 def get_page(company: str, page: int):
+    global cache
+
+    if company in cache and page in cache[company]:
+        return cache[company][page]
+
     from . import requests
     from bs4 import BeautifulSoup
 
@@ -81,5 +89,9 @@ def get_page(company: str, page: int):
     progress.stop()
 
     QproDefaultConsole.clear()
+
+    if company not in cache:
+        cache[company] = {}
+    cache[company][page] = infos
 
     return infos
