@@ -39,7 +39,7 @@ def ask_sites(site: str):
             "name": "list",
             "message": f"请为 '{site}' 选择一个数据源",
             "choices": sites,
-            "default": "busjav",
+            "default": "javdb",
         }
     )
 
