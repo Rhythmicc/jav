@@ -41,7 +41,7 @@ def _search(designation: str):
 
 
 @cover_func_wrapper
-def _cover(designation: str, driver=None):
+def _cover(designation: str):
     """
     下载多个封面
 
@@ -51,6 +51,8 @@ def _cover(designation: str, driver=None):
     # ! 此函数返回番号的封面url即可，如果没有封面则 raise Exception("未找到封面")
     designation = designation.upper()
     url = _search(designation)
+
+    QproDefaultConsole.print(url)
 
     res = requests.get(url)
     if res.status_code != 200:
@@ -63,7 +65,7 @@ def _cover(designation: str, driver=None):
 
 
 @info_func_wrapper
-def _info(designation: str, driver=None):
+def _info(designation: str):
     """
     查询番号信息
 
@@ -86,6 +88,8 @@ def _info(designation: str, driver=None):
     info["img"] = page.find("img", class_="video-cover").get("src")
     info["title"] = page.find("strong", class_="current-title").text
     info["imgs"] = [i.get("href") for i in page.find_all("a", class_="tile-item")]
+    info["imgs"] = [i for i in info["imgs"] if i.startswith("http")]
+    return info
 
 
 def _web(designation: str):
@@ -101,3 +105,7 @@ def _web(designation: str):
     import webbrowser
 
     webbrowser.open(url)
+
+
+if __name__ == "__main__":
+    print(_search("SSIS-575"))
