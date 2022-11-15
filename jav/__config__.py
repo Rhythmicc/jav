@@ -79,6 +79,8 @@ def init_config():
                     "深田えいみ",
                     "七沢みあ",
                     "香水じゅん",
+                    "天使もえ",
+                    "青空ひかり",
                 ],
                 "wish_list_path": _ask(problems["wish_list_path"]),
                 "disable_translate": _ask(problems["disable_translate"]),
