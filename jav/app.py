@@ -4,7 +4,6 @@ from QuickProject.Commander import Commander
 
 app = Commander(True)
 wish_list = WishList()
-driver = None
 
 
 @app.command()
@@ -38,21 +37,11 @@ def info(designation: str, company: str = ""):
 
     :param designation: 番号
     """
-    global driver
     _flag = requirePackage(f".sites.{site}", "using_selenium")
     _info = requirePackage(f".sites.{site}", "_info")
 
     if _flag and not driver:
-        from selenium import webdriver
-
-        remote_url = config.select("remote_url")
-        if not remote_url:
-            raise Exception("未设置远程地址")
-        with QproDefaultConsole.status("正在打开远程浏览器"):
-            driver = webdriver.Remote(
-                command_executor=remote_url,
-                desired_capabilities=webdriver.DesiredCapabilities.CHROME,
-            )
+        driver = getDriver()
 
     designation = designation.upper()
     QproDefaultConsole.clear()
@@ -285,13 +274,67 @@ def wish():
 
 
 @app.command()
+def top15():
+    """
+    查看近期榜单
+    """
+    from . import _ask
+    from .top15 import get_top15
+    from QuickStart_Rhy import cut_string
+    from QuickStart_Rhy.TuiTools.Table import qs_default_table
+
+    infos = get_top15()
+    closeDriver()
+    if not infos:
+        return
+    table = qs_default_table(
+        ["序号", "🔥", "😍", "番号", "演员", {"header": "标题", "justify": "left"}],
+        title="热门榜单\n",
+    )
+
+    for n, info in enumerate(infos):
+        table.add_row(
+            f"[bold cyan]{n + 1}[/bold cyan]",
+            str(info["watched"]),
+            str(info["liked"]),
+            f'[bold magenta]{info["designation"]}[/bold magenta]',
+            f'[bold yellow]{info["actress"]}[/bold yellow]',
+            " ".join(
+                cut_string(
+                    " ".join(info["title"]), int(QproDefaultConsole.width * 0.45)
+                )
+            ),
+        )
+
+    while True:
+        QproDefaultConsole.print(table, justify="center")
+        QproDefaultConsole.print("-" * QproDefaultConsole.width)
+        index = _ask(
+            {
+                "type": "input",
+                "message": "输入序号查询详细信息 (q 退出)",
+                "validate": lambda x: (
+                    x.isdigit() and 1 <= int(x) <= len(infos) and int(x) != 0
+                )
+                or x in ["q"],
+            }
+        )
+        if index == "q":
+            break
+        else:
+            info = infos[int(index) - 1]
+            app.real_call("info", info["designation"])
+            QproDefaultConsole.clear()
+
+
+@app.command()
 def update():
     """
     更新jav工具
     """
     from QuickProject import user_pip
 
-    with QproDefaultConsole.status("正在更新...") as st:
+    with QproDefaultConsole.status("正在更新..."):
         external_exec(
             f"{user_pip} install git+https://github.com/Rhythmicc/jav.git -U", True
         )
@@ -299,18 +342,14 @@ def update():
 
 
 def main():
-    global driver
     try:
         app()
         QproDefaultConsole.clear()
     except:
         QproDefaultConsole.print_exception()
-        if driver:
-            driver.quit()
-            driver = None
+        closeDriver()
     finally:
-        if driver:
-            driver.quit()
+        closeDriver()
     wish_list.store()
 
 

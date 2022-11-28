@@ -304,3 +304,29 @@ def info_func_wrapper(func):
             return raw_info
 
     return wrapper
+
+
+_driver = None
+
+
+def getDriver():
+    global _driver
+    if not _driver:
+        remote_url = config.select("remote_url")
+        if not remote_url:
+            raise Exception("未设置远程地址")
+        from selenium import webdriver
+
+        _driver = webdriver.Remote(
+            command_executor=remote_url,
+            desired_capabilities=webdriver.DesiredCapabilities.CHROME,
+        )
+    return _driver
+
+
+def closeDriver():
+    global _driver
+    if _driver:
+        _driver.close()
+        _driver.quit()
+        _driver = None
