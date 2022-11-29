@@ -2,7 +2,7 @@ from . import *
 from .wish import WishList
 from QuickProject.Commander import Commander
 
-app = Commander(True)
+app = Commander("jav", True)
 wish_list = WishList()
 
 
