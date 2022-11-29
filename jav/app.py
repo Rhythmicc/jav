@@ -31,14 +31,19 @@ def cover():
 
 
 @app.command()
-def info(designation: str, company: str = ""):
+def info(designation: str, _company: str = ""):
     """
     查询番号信息和链接
 
     :param designation: 番号
     """
-    _flag = requirePackage(f".sites.{site}", "using_selenium")
-    _info = requirePackage(f".sites.{site}", "_info")
+    _flag = requirePackage(
+        f".sites.{site}" if not _company else f".site.{sites[_company]}",
+        "using_selenium",
+    )
+    _info = requirePackage(
+        f".sites.{site}" if not _company else f".site.{sites[_company]}", "_info"
+    )
 
     if _flag and not driver:
         driver = getDriver()
@@ -211,7 +216,7 @@ def rank(enable_translate: bool = False):
         else:
             info = infos[int(index) - 1]
             QproDefaultConsole.print(QproInfoString, info["designation"])
-            app.real_call("info", info["designation"])
+            app.real_call("info", info["designation"], company)
             if info["designation"] not in wish_list.get_list() and _ask(
                 {
                     "type": "confirm",

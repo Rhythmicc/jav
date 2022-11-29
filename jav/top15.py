@@ -41,4 +41,4 @@ def get_top15():
                     "liked": liked,
                 }
             )
-    return sorted(res, key=lambda x: x["watched"], reverse=True)[:15]
+    return sorted(res, key=lambda x: (x["liked"], x["watched"]), reverse=True)[:15]
