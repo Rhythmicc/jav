@@ -309,24 +309,42 @@ def info_func_wrapper(func):
 _driver = None
 
 
-def getDriver():
+def getLocalDriver():
     global _driver
-    if not _driver:
-        remote_url = config.select("remote_url")
-        if not remote_url:
-            raise Exception("未设置远程地址")
+
+    if _driver is None:
+        from selenium import webdriver
+
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")
+
+        _driver = webdriver.Chrome(options=options)
+    return _driver
+
+
+def getRemoteDriver():
+    global _driver
+
+    if _driver is None:
         from selenium import webdriver
 
         _driver = webdriver.Remote(
-            command_executor=remote_url,
+            command_executor=config.select("remote_url"),
             desired_capabilities=webdriver.DesiredCapabilities.CHROME,
         )
     return _driver
 
 
+def getDriver():
+    if config.select("remote_url"):
+        return getRemoteDriver()
+    else:
+        return getLocalDriver()
+
+
 def closeDriver():
     global _driver
-    if _driver:
+    if _driver is not None:
         _driver.close()
         _driver.quit()
         _driver = None

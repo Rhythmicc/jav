@@ -349,7 +349,7 @@ def update():
 def main():
     try:
         app()
-        QproDefaultConsole.clear()
+        # QproDefaultConsole.clear()
     except:
         QproDefaultConsole.print_exception()
         closeDriver()
