@@ -38,11 +38,11 @@ def info(designation: str, _company: str = ""):
     :param designation: 番号
     """
     _flag = requirePackage(
-        f".sites.{site}" if not _company else f".site.{sites[_company]}",
+        f".sites.{site}" if not _company else f".sites.{sites[_company]}",
         "using_selenium",
     )
     _info = requirePackage(
-        f".sites.{site}" if not _company else f".site.{sites[_company]}", "_info"
+        f".sites.{site}" if not _company else f".sites.{sites[_company]}", "_info"
     )
 
     if _flag and not driver:
