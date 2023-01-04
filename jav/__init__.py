@@ -4,7 +4,6 @@ import sys
 
 import requests
 from QuickStart_Rhy import headers
-from QuickProject import requirePackage
 from QuickProject import (
     _ask,
     QproDefaultConsole,
@@ -315,10 +314,10 @@ def getLocalDriver():
     if _driver is None:
         from selenium import webdriver
 
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
+        # options = webdriver.ChromeOptions()
+        # options.add_argument("headless")
 
-        _driver = webdriver.Chrome(options=options)
+        _driver = webdriver.Chrome()
     return _driver
 
 

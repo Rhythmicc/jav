@@ -59,12 +59,7 @@ def get_page(company: str, page: int):
         return None
     soup = BeautifulSoup(r.text, "html.parser")
 
-    from QuickStart_Rhy.TuiTools.Bar import NormalProgressBar
-
     ls = soup.find_all("a", class_="work")
-    progress, task_id = NormalProgressBar("解析与翻译", len(ls))
-    progress.start()
-    progress.start_task(task_id)
 
     for info in ls:
         designation = info.find("h4", class_="work-id").text.strip()
@@ -78,15 +73,11 @@ def get_page(company: str, page: int):
         infos.append(
             {
                 "designation": designation.upper(),
-                "title": translate(title),
+                "title": title,
                 "date": date,
                 "actress": actress,
             }
         )
-        time.sleep(0.2)
-        progress.advance(task_id)
-    progress.stop_task(task_id)
-    progress.stop()
 
     QproDefaultConsole.clear()
 
