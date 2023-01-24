@@ -16,7 +16,7 @@ def _search(designation: str):
     res = requests.get(search_url.format(designation=designation))
 
     if res.status_code != 200:
-        raise Exception("搜索番号时出错")
+        raise Exception(f"搜索番号时出错: {res.status_code}")
 
     from bs4 import BeautifulSoup
 
@@ -56,7 +56,7 @@ def _cover(designation: str):
 
     res = requests.get(url)
     if res.status_code != 200:
-        raise Exception("打开番号网页时出错")
+        raise Exception(f"打开番号网页时出错: {res.status_code}")
 
     from bs4 import BeautifulSoup
 
@@ -78,7 +78,7 @@ def _info(designation: str):
 
     res = requests.get(url)
     if res.status_code != 200:
-        raise Exception("打开番号网页时出错")
+        raise Exception(f"打开番号网页时出错: {res.status_code}")
 
     from bs4 import BeautifulSoup
 

@@ -1,5 +1,5 @@
 import time
-from . import info_baseUrl, translate
+from . import info_baseUrl
 
 companies = {
     "S1 NO.1 STYLE": f"{info_baseUrl}/studio/763?page=",

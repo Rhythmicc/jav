@@ -3,7 +3,7 @@ import re
 import sys
 
 import requests
-from QuickStart_Rhy import headers
+from QuickStart_Rhy.NetTools import headers
 from QuickProject import (
     _ask,
     QproDefaultConsole,
