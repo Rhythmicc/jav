@@ -3,8 +3,33 @@ const completionSpec: Fig.Spec = {
     "description": "jav",
     "subcommands": [
         {
-            "name": "--help",
-            "description": "获取帮助"
+            "name": "complete",
+            "description": "获取补全列表",
+            "args": [],
+            "options": [
+                {
+                    "name": "--team",
+                    "description": "团队名",
+                    "isOptional": true,
+                    "args": {
+                        "name": "team",
+                        "description": "团队名"
+                    }
+                },
+                {
+                    "name": "--token",
+                    "description": "团队token",
+                    "isOptional": true,
+                    "args": {
+                        "name": "token",
+                        "description": "团队token"
+                    }
+                },
+                {
+                    "name": "--is-script",
+                    "description": "是否为脚本"
+                }
+            ]
         },
         {
             "name": "cover",
@@ -37,22 +62,23 @@ const completionSpec: Fig.Spec = {
         {
             "name": "rank",
             "description": "查看近期榜单",
-            "args": [
+            "args": [],
+            "options": [
                 {
-                    "name": "--enable_translate",
-                    "description": "是否翻译",
-                    "isOptional": true,
-                    "args": {
-                        "name": "enable_translate",
-                        "description": "是否翻译"
-                    }
+                    "name": "--enable-translate",
+                    "description": "是否翻译"
                 }
-            ],
-            "options": []
+            ]
         },
         {
             "name": "wish",
             "description": "心愿单",
+            "args": [],
+            "options": []
+        },
+        {
+            "name": "top15",
+            "description": "查看近期榜单",
             "args": [],
             "options": []
         },

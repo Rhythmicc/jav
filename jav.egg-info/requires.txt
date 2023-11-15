@@ -1,4 +1,0 @@
-Qpro
-QuickStart_Rhy
-pyperclip
-requests

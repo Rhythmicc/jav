@@ -8,21 +8,17 @@ prev=${words[CURRENT-1]}
 _jav_args_comp() {
     local -a opt_args
     if [[ ${prev} == info ]]; then
-        opt_args=(
+    	opt_args=(
             
         )
     elif [[ ${prev} == web ]]; then
-        opt_args=(
+    	opt_args=(
             
         )
-    elif [[ ${prev} == rank ]]; then
-        opt_args=(
-            --enable_translate:'是否翻译'
-        )
-else
-    _arguments -S -s '*:filename:_files'
-    return
-fi
+    else
+        _arguments -S -s '*:filename:_files'
+        return
+    fi
 
     _describe subcommand opt_args
 }
@@ -31,12 +27,13 @@ fi
 _jav_main() {
     local -a args
     args=(
-        --help:'获取帮助'
+        complete:'获取补全列表'
         cover:'下载所有的封面'
         info:'查询番号信息和链接'
         web:'通过浏览器获取番号信息'
         rank:'查看近期榜单'
         wish:'心愿单'
+        top15:'查看近期榜单'
         update:'更新jav工具'
     )
 
