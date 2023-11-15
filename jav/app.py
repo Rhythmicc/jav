@@ -51,6 +51,7 @@ def info(designation: str, _company: str = ""):
     designation = designation.upper()
     QproDefaultConsole.clear()
     info = _info(designation, driver=driver) if _flag else _info(designation)
+    date = requirePackage('datetime', 'datetime').strptime(info["date"], '%Y-%m-%d')
     if not info:
         return
     from QuickProject import _ask
@@ -74,7 +75,8 @@ def info(designation: str, _company: str = ""):
             QproDefaultConsole.print(
                 QproInfoString, f'已保存为: "{designation}_samples.png"'
             )
-    if _ask({"type": "confirm", "name": "confirm", "message": "是否下载?"}):
+    cur_date = requirePackage('datetime', 'datetime').now()
+    if cur_date > date and _ask({"type": "confirm", "name": "confirm", "message": "是否下载?"}):
         source_name = requirePackage(f".sites.{site}", "source_name")
         if (
             _ask(
@@ -123,6 +125,8 @@ def info(designation: str, _company: str = ""):
             }
         ):
             wish_list.remove(designation)
+            return False
+    return cur_date > date
 
 
 @app.command()
@@ -216,8 +220,8 @@ def rank(enable_translate: bool = False):
         else:
             info = infos[int(index) - 1]
             QproDefaultConsole.print(QproInfoString, info["designation"])
-            app.real_call("info", info["designation"], company)
-            if info["designation"] not in wish_list.get_list() and _ask(
+            downloadable =  app.real_call("info", info["designation"], company)
+            if not downloadable and info["designation"] not in wish_list.get_list() and _ask(
                 {
                     "type": "confirm",
                     "name": "confirm",

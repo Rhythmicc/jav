@@ -11,6 +11,7 @@ from QuickProject import (
     QproErrorString,
     user_lang,
     user_pip,
+    external_exec
 )
 
 from .__config__ import JavConfig
@@ -23,28 +24,6 @@ famous_actress = config.select("famous_actress")
 terminal_font_size = int(config.select("terminal_font_size"))
 
 info_baseUrl = "https://javtxt.com"
-
-
-def external_exec(cmd: str, without_output: bool = False):
-    """
-    外部执行命令
-
-    :param cmd: 命令
-    :param without_output: 是否不输出
-    :return: status code, output
-    """
-    from subprocess import Popen, PIPE
-
-    p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE, encoding="utf-8")
-    ret_code = p.wait()
-    stdout, stderr = p.communicate()
-    content = stdout.strip() + stderr.strip()
-    if ret_code and content and not without_output:
-        QproDefaultConsole.print(QproErrorString, content)
-    elif content and not without_output:
-        QproDefaultConsole.print(QproErrorString, content)
-    return ret_code, content
-
 
 def requirePackage(
     pname: str,
@@ -104,7 +83,7 @@ def translate(content):
         return content
 
     import time
-    from QuickStart_Rhy.api import translate as _translate
+    from QuickStart_Rhy.apiTools import translate as _translate
 
     raw = content
     try:
@@ -326,10 +305,12 @@ def getRemoteDriver():
 
     if _driver is None:
         from selenium import webdriver
+        options = webdriver.ChromeOptions()
+        options.add_argument("--proxy-server={}".format(config.select("remote_proxy")))
 
         _driver = webdriver.Remote(
             command_executor=config.select("remote_url"),
-            desired_capabilities=webdriver.DesiredCapabilities.CHROME,
+            options=options,
         )
     return _driver
 

@@ -1,6 +1,6 @@
 import os
 import json
-from QuickProject import user_root, _ask
+from QuickProject import user_root, _ask, QproDefaultStatus
 
 config_path = os.path.join(user_root, ".jav", "config.json")
 sites = ["busjav", "jav321", "guru", "javgg", "javdb"]
@@ -29,6 +29,7 @@ problems = {
         "default": False,
     },
     "remote_url": {"type": "input", "message": "请输入远程浏览器URL (无则跳过):"},
+    "remote_proxy": {"type": "input", "message": "请输入代理地址 (无则跳过):"},
 }
 
 
