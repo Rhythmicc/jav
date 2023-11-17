@@ -62,10 +62,13 @@ def generate_nfo(force: bool = False):
             nfo_path = os.path.join(root, f'{filename}.nfo')
             extrafanart_path = os.path.join(root, 'extrafanart')
             cache_info = os.path.join(config.select('cache_path'), designation)
+            poster_path = os.path.join(root, 'poster.jpg')
             _flag = True
 
             if not os.path.exists(extrafanart_path) and not os.path.isdir(extrafanart_path):
                 os.mkdir(extrafanart_path)
+                _flag = False
+            if not os.path.exists(poster_path):
                 _flag = False
             if _flag and os.path.exists(nfo_path) and not force:
                 continue
@@ -101,5 +104,5 @@ def generate_nfo(force: bool = False):
             name_map = {
                 info['img']: os.path.join(root, 'poster'),
             }
-            name_map.update({i: os.path.join(root, 'extrafanart', f'extrafanart-{index + 1}') for index, i in enumerate(info['imgs'])})
+            name_map.update({i: os.path.join(extrafanart_path, f'extrafanart-{index + 1}') for index, i in enumerate(info['imgs'])})
             multi_single_dl([info['img']] + info['imgs'], name_map=name_map)
