@@ -226,7 +226,7 @@ def info_func_wrapper(func):
                 html = requests.get(
                     f"{info_baseUrl}/search?type=id&q={designation}/", headers=headers
                 ).text
-                html = BeautifulSoup(html, "lxml")
+                html = BeautifulSoup(html, "html.parser")
                 sub_url = html.find("a", class_="work")["href"]
                 html = requests.get(f"{info_baseUrl}{sub_url}", headers=headers).text
                 content = re.findall("<p>(.*?)</p>", html)[0]
@@ -247,8 +247,6 @@ def info_func_wrapper(func):
                     title=raw_info["title"] + "\n",
                 )
 
-                # st.update("翻译番号信息")
-                # content = translate(content)
                 st.update("准备展示")
                 table.add_row(
                     "🗒️  简介",
