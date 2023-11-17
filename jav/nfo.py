@@ -90,7 +90,7 @@ def generate_nfo(force: bool = False):
                         outline=info['plot'] if 'plot' in info else info['title'],
                         length=info['length'],
                         director=info['director'] if 'director' in info else '未知',
-                        actors='\n    '.join([ACTOR_TEMPLATE.format(name=i['name'], photo=i['photo']) for i in info['actor']]),
+                        actors='  '.join([ACTOR_TEMPLATE.format(name=i['name'], photo=i['photo']) for i in info['actor']]),
                         tags='\n  '.join([f'<tag>{i.strip()}</tag>' for i in info['tag'].strip().split(',')]),
                         genre='\n  '.join([f'<genre>{i.strip()}</genre>' for i in info['tag'].strip().split(',')]),
                         designation=designation,
