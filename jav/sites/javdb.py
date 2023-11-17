@@ -124,10 +124,10 @@ def _info(designation: str):
     for _id, i in enumerate(magnets_content):
         info['magnets'].append({
             'id': _id + 1,
-            'name': i.find('span', class_="name").text,
-            'meta': i.find("span", class_="meta").text,
-            'date': i.find("span", class_="time").text,
-            'url': i.find("a").get("href")
+            'name': i.find('span', class_="name").text.strip(),
+            'meta': i.find("span", class_="meta").text.strip(),
+            'date': i.find("span", class_="time").text.strip(),
+            'url': i.find("a").get("href").strip()
         })
 
     info['url'] = url
