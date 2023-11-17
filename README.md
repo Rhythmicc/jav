@@ -39,31 +39,31 @@ pip3 install git+https://github.com/Rhythmicc/jav.git -U
 
 2. 增加其他自定义刮削方式，在`site`文件夹下新建一个`<站点名>.py`，结构如下:
 
-   ```python
-     from .. import *
-   
-     source_name = '' # 站点名
+    ```python
+    from .. import *
+
+    source_name = '' # 站点名
 
 
-     @cover_func_wrapper
-     def _cover(designation: str):
-         """
-         下载多个封面
-    
-         :param designations: 番号列表
-         :param set_covername: 设置封面图片名称
-         """
-         # ! 此函数返回番号的封面url即可，如果没有封面则 raise Exception("未找到封面")
-    
-     @info_func_wrapper
-     def _info(designation: str) -> dict:
-         """
-         查询番号信息
-    
-         :param designation: 番号
-         :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
-         """
-         # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
-   ```
+    @cover_func_wrapper
+    def _cover(designation: str):
+        """
+        下载多个封面
+
+        :param designations: 番号列表
+        :param set_covername: 设置封面图片名称
+        """
+        # ! 此函数返回番号的封面url即可，如果没有封面则 raise Exception("未找到封面")
+
+    @info_func_wrapper
+    def _info(designation: str) -> dict:
+        """
+        查询番号信息
+
+        :param designation: 番号
+        :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
+        """
+        # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
+    ```
 
 3. 提 PR。
