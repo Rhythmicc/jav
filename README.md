@@ -24,7 +24,7 @@ pip3 install git+https://github.com/Rhythmicc/jav.git -U
 | nfo    | `jav nfo`         | 刮削目录下所有视频                     |
 | update | `jav update`      | 更新 jav                               |
 
-初次运行`jav`会自动引导配置。
+初次运行`jav`会自动引导配置，包括选择片商的刮削方式，这里建议都选`javdb`（一路默认选择即可），当前版本未对其他站点做兼容，如果你有其他站点的刮削方式，欢迎提交 PR。
 
 ## Demo
 
@@ -63,7 +63,8 @@ pip3 install git+https://github.com/Rhythmicc/jav.git -U
         :param designation: 番号
         :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
         """
-        # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
+        # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''， 'length': '', 'director': '', 'studio': '', 'rate': '', 'tag': '', 'actor': [{'name': '', 'photo': ''}], 'magnets': [{'id': '', 'name': '', 'meta': '', 'date': '', 'url': ''}]}
     ```
 
-3. 提 PR。
+3. 自行安装测试：`pip3 install git+https://<你的仓库地址>/jav.git -U`。
+4. 测试通过后提交 PR。
