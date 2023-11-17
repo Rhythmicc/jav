@@ -80,7 +80,7 @@ def generate_nfo(force: bool = False):
                         title=info['title'],
                         studio=info['studio'],
                         year=info['date'][:4],
-                        outline=info['plot'],
+                        outline=info['plot'] if 'plot' in info else info['title'],
                         length=info['length'],
                         director=info['director'],
                         actors='\n    '.join([ACTOR_TEMPLATE.format(name=i['name'], photo=i['photo']) for i in info['actor']]),

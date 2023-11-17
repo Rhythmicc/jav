@@ -272,7 +272,7 @@ def info_func_wrapper(func):
             return raw_info, table
         except Exception as e:
             QproDefaultConsole.print(QproErrorString, "出现错误: {}".format(e))
-            return None, None
+            return raw_info, None
 
     return wrapper
 

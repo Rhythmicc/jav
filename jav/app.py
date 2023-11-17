@@ -84,17 +84,6 @@ def info(designation: str, _company: str = ""):
     if cur_date > date and _ask(
         {"type": "confirm", "name": "confirm", "message": "是否下载?"}
     ):
-        # table = requirePackage('QuickStart_Rhy.TuiTools.Table', 'qs_default_table', 'QuickStart_Rhy')(
-        #     ["序号", "名称", "元信息", "日期"]
-        # )
-        # for _id, magnet_info in enumerate(info["magnets"]):
-        #     table.add_row(
-        #         str(_id + 1),
-        #         magnet_info["name"],
-        #         magnet_info["meta"],
-        #         magnet_info["date"]
-        #     )
-        # QproDefaultConsole.print(table, justify="center")
         while res := _ask(
             {
                 "type": "list",
