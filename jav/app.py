@@ -50,10 +50,13 @@ def info(designation: str, _company: str = ""):
 
     designation = designation.upper()
     QproDefaultConsole.clear()
-    info = _info(designation, driver=driver) if _flag else _info(designation)
-    date = requirePackage('datetime', 'datetime').strptime(info["date"], '%Y-%m-%d')
+    info, table = _info(designation, driver=driver) if _flag else _info(designation)
+    date = requirePackage("datetime", "datetime").strptime(info["date"], "%Y-%m-%d")
     if not info:
         return
+
+    QproDefaultConsole.print(table, justify="center")
+
     from QuickProject import _ask
 
     if _ask(
@@ -75,51 +78,42 @@ def info(designation: str, _company: str = ""):
             QproDefaultConsole.print(
                 QproInfoString, f'已保存为: "{designation}_samples.png"'
             )
-    cur_date = requirePackage('datetime', 'datetime').now()
-    if cur_date > date and _ask({"type": "confirm", "name": "confirm", "message": "是否下载?"}):
-        source_name = requirePackage(f".sites.{site}", "source_name")
-        if (
-            _ask(
-                {
-                    "type": "list",
-                    "name": "list",
-                    "message": "请选择下载方式",
-                    "choices": ["[1] jav 内置", f"[2] 在 {source_name} 自行提取"],
-                }
-            )
-            == "[1] jav 内置"
+    cur_date = requirePackage("datetime", "datetime").now()
+    if cur_date > date and _ask(
+        {"type": "confirm", "name": "confirm", "message": "是否下载?"}
+    ):
+        # table = requirePackage('QuickStart_Rhy.TuiTools.Table', 'qs_default_table', 'QuickStart_Rhy')(
+        #     ["序号", "名称", "元信息", "日期"]
+        # )
+        # for _id, magnet_info in enumerate(info["magnets"]):
+        #     table.add_row(
+        #         str(_id + 1),
+        #         magnet_info["name"],
+        #         magnet_info["meta"],
+        #         magnet_info["date"]
+        #     )
+        # QproDefaultConsole.print(table, justify="center")
+        while res := _ask(
+            {
+                "type": "list",
+                "message": "请选择下载链接",
+                "name": "magnet",
+                "choices": [
+                    "{id} | {name} | {meta} | {date}".format(**magnet_info)
+                    for magnet_info in info["magnets"]
+                ]
+                + ["0 退出"],
+            }
         ):
-            from QuickStart_Rhy.API.SimpleAPI import Designation2magnet
+            if res == "0 退出":
+                break
+            url = info["magnets"][int(res.split()[0]) - 1]["url"]
+            requirePackage("pyperclip", "copy")(url)
+            QproDefaultConsole.print(QproInfoString, "已复制到剪贴板:", url)
 
-            searcher = Designation2magnet(designation)
-            infos = searcher.search_designation()
-            choices = [
-                f"[{n + 1}] " + i[1] + ": " + i[-1] for n, i in enumerate(infos)
-            ] + ["[-1] 取消"]
-            ch_index = _ask(
-                {
-                    "type": "list",
-                    "message": "Select | 选择",
-                    "name": "sub-url",
-                    "choices": choices,
-                }
-            )
-            if ch_index.startswith("[-1]"):
-                return
-            url = searcher.get_magnet(infos[choices.index(ch_index)][0])
-
-            copy = requirePackage("pyperclip", "copy", not_ask=True)
-            if copy:
-                copy(url)
-                QproDefaultConsole.print(QproInfoString, "链接已复制!")
-            else:
-                QproDefaultConsole.print(QproInfoString, f"链接: {url}")
-        else:
-            app.real_call("web", designation)
         if designation in wish_list.get_list() and _ask(
             {
                 "type": "confirm",
-                "name": "confirm",
                 "message": "是否从心愿单中删除?",
                 "default": True,
             }
@@ -220,14 +214,18 @@ def rank(enable_translate: bool = False):
         else:
             info = infos[int(index) - 1]
             QproDefaultConsole.print(QproInfoString, info["designation"])
-            downloadable =  app.real_call("info", info["designation"], company)
-            if not downloadable and info["designation"] not in wish_list.get_list() and _ask(
-                {
-                    "type": "confirm",
-                    "name": "confirm",
-                    "message": "是否添加至心愿单?",
-                    "default": True,
-                }
+            downloadable = app.real_call("info", info["designation"], company)
+            if (
+                not downloadable
+                and info["designation"] not in wish_list.get_list()
+                and _ask(
+                    {
+                        "type": "confirm",
+                        "name": "confirm",
+                        "message": "是否添加至心愿单?",
+                        "default": True,
+                    }
+                )
             ):
                 wish_list.add(info)
                 QproDefaultConsole.print(QproInfoString, "已添加至心愿单")
@@ -334,6 +332,18 @@ def top15():
             info = infos[int(index) - 1]
             app.real_call("info", info["designation"])
             QproDefaultConsole.clear()
+
+
+@app.command()
+def nfo(force: bool = False):
+    """
+    找到目录下所有视频文件并生成nfo
+
+    :param force: 是否强制更新
+    """
+    from .nfo import generate_nfo
+
+    generate_nfo()
 
 
 @app.command()

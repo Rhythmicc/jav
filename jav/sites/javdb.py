@@ -73,6 +73,7 @@ def _info(designation: str):
     :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
     """
     # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
+    PHOTO_URL = "https://c0.jdbstatic.com/avatars/{prefix}/{actor_id}.jpg"
     designation = designation.upper()
     url = _search(designation)
 
@@ -89,6 +90,34 @@ def _info(designation: str):
     info["title"] = page.find("strong", class_="current-title").text
     info["imgs"] = [i.get("href") for i in page.find_all("a", class_="tile-item")]
     info["imgs"] = [i for i in info["imgs"] if i.startswith("http")]
+    
+    _info_nav = page.find("nav", class_="movie-panel-info")
+    panel_blocks = _info_nav.find_all("div", class_="panel-block")[1:]
+    info['date'] = panel_blocks[0].find("span", class_="value").text
+    info['length'] = panel_blocks[1].find("span", class_="value").text
+    info['director'] = panel_blocks[2].find("span", class_="value").text
+    info['studio'] = panel_blocks[3].find("span", class_="value").text
+    info['series'] = panel_blocks[4].find("span", class_="value").text
+    info['rate'] = re.findall(r'\d+', panel_blocks[5].find("span", class_="value").text)[0]
+    info['tag'] = [i.text for i in panel_blocks[6].find_all("a")]
+    info['actor'] = []
+    for i in panel_blocks[7].find_all("a"):
+        href = i.get("href").split('/')[-1]
+        info['actor'].append({'name': i.text, 'photo': PHOTO_URL.format(prefix=href[:2].lower(), actor_id=href)})
+    
+    magnets_content = page.find("div", class_="magnet-links").find_all("div", class_="item")
+    info['magnets'] = []
+    for _id, i in enumerate(magnets_content):
+        info['magnets'].append({
+            'id': _id + 1,
+            'name': i.find('span', class_="name").text,
+            'meta': i.find("span", class_="meta").text,
+            'date': i.find("span", class_="time").text,
+            'url': i.find("a").get("href")
+        })
+
+    info['url'] = url
+
     return info
 
 

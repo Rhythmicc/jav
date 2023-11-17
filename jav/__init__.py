@@ -11,7 +11,8 @@ from QuickProject import (
     QproErrorString,
     user_lang,
     user_pip,
-    external_exec
+    external_exec,
+    QproDefaultStatus
 )
 
 from .__config__ import JavConfig
@@ -82,15 +83,11 @@ def translate(content):
     if disable_translate:
         return content
 
-    import time
     from QuickStart_Rhy.apiTools import translate as _translate
 
     raw = content
     try:
         content = _translate(content)
-        while content.startswith("[ERROR] 请求失败了"):
-            content = _translate(content)
-            time.sleep(1)
     except Exception as e:
         QproDefaultConsole.print(QproErrorString, "翻译失败: {}".format(repr(e)))
         content = raw
@@ -275,11 +272,10 @@ def info_func_wrapper(func):
                         raw_info["date"] = item[1]
                     table.add_row(*item)
                 table.show_header = False
-            QproDefaultConsole.print(table, justify="center")
-            return raw_info
+            return raw_info, table
         except Exception as e:
             QproDefaultConsole.print(QproErrorString, "出现错误: {}".format(e))
-            return raw_info
+            return None, None
 
     return wrapper
 

@@ -30,6 +30,7 @@ problems = {
     },
     "remote_url": {"type": "input", "message": "请输入远程浏览器URL (无则跳过):"},
     "remote_proxy": {"type": "input", "message": "请输入代理地址 (无则跳过):"},
+    "cache_path": {'type': 'input', 'message': '请输入缓存路径(默认为 ~/.jav/cache):', 'default': os.path.join(user_root, '.jav', 'cache')},
 }
 
 
@@ -86,6 +87,7 @@ def init_config():
                 "wish_list_path": _ask(problems["wish_list_path"]),
                 "disable_translate": _ask(problems["disable_translate"]),
                 "remote_url": _ask(problems["remote_url"]),
+                "cache_path": os.path.join(user_root, ".jav", "cache"),
             },
             f,
             ensure_ascii=False,
