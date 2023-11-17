@@ -72,7 +72,18 @@ def _info(designation: str):
     :param designation: 番号
     :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
     """
-    # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
+    # ! 此函数返回 {
+    # !    'img': '封面', 
+    # !    'imgs': ['花絮'], 
+    # !    'title': ''， 
+    # !    'length': '时长（分钟）', 
+    # !    'director': '导演', 
+    # !    'studio': '片商', 
+    # !    'rate': '评分', 
+    # !    'tag': '分类', 
+    # !    'actor': [{'name': '', 'photo': '头像链接'}], 
+    # !    'magnets': [{'id': '1~n', 'name': '文件名', 'meta': '空间', 'date': '发布日期', 'url': '磁力链'}]
+    # ! }，（'plot' 和 'date' 会自动生成。）
     PHOTO_URL = "https://c0.jdbstatic.com/avatars/{prefix}/{actor_id}.jpg"
     designation = designation.upper()
     url = _search(designation)
