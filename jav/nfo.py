@@ -6,7 +6,7 @@ from . import *
 
 
 ACTOR_TEMPLATE = """\
-  <actor>
+<actor>
     <name>{name}</name>
     <thumb>{photo}</thumb>
   </actor>
