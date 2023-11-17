@@ -98,7 +98,7 @@ def _info(designation: str):
     info['director'] = panel_blocks[2].find("span", class_="value").text
     info['studio'] = panel_blocks[3].find("span", class_="value").text
     info['series'] = panel_blocks[4].find("span", class_="value").text
-    info['rate'] = re.findall(r'\d+', panel_blocks[5].find("span", class_="value").text)[0]
+    info['rate'] = re.findall(r'\d+\.\d+', panel_blocks[5].find("span", class_="value").text)[0]
     info['tag'] = [i.text for i in panel_blocks[6].find_all("a")]
     info['actor'] = []
     for i in panel_blocks[7].find_all("a"):
