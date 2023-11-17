@@ -7,30 +7,6 @@ wish_list = WishList()
 
 
 @app.command()
-def cover():
-    """
-    下载所有的封面
-    """
-    _cover = requirePackage(f".sites.{site}", "_cover")
-    import os
-
-    for rt, _, files in os.walk("."):
-        for file in files:
-            suffix = file.split(".")[-1]
-            if suffix not in ["mp4", "mkv"]:
-                continue
-            if (
-                os.path.exists(os.path.join(rt, "folder.jpg"))
-                or os.path.exists(os.path.join(rt, "folder.png"))
-                or os.path.exists(os.path.join(rt, "folder.jpeg"))
-            ):
-                continue
-            designation = file.split(".")[0]
-            QproDefaultConsole.print(QproInfoString, os.path.join(rt, file))
-            _cover([designation], set_covername=os.path.join(rt, "folder"))
-
-
-@app.command()
 def info(designation: str, _company: str = ""):
     """
     查询番号信息和链接

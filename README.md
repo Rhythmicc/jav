@@ -16,7 +16,6 @@ pip3 install git+https://github.com/Rhythmicc/jav.git -U
 
 | 子命令 | 调用方式          | 描述                                   |
 | ------ | ----------------- | -------------------------------------- |
-| cover  | `jav cover`       | 遍历目录下的番号视频并为其自动下载封面 |
 | info   | `jav info <番号>` | 查询番号信息+获取下载链接+存心愿单     |
 | web    | `jav web <番号>`  | 从浏览器查询番号信息                   |
 | rank   | `jav rank`        | 查询片商的近期榜单                     |
