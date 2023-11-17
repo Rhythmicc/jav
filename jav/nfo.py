@@ -42,61 +42,6 @@ TEMPLATE = """\
 </movie>
 """
 
-# def _info(designation: str):
-#     """
-#     查询番号信息
-
-#     :param designation: 番号
-#     :return dict: {'img', 'imgs', 'title', 'plot', 'date'}
-#     """
-#     # ! 此函数返回 {'img': '', 'imgs': '', 'title': ''}
-#     PHOTO_URL = "https://c0.jdbstatic.com/avatars/{prefix}/{actor_id}.jpg"
-#     designation = designation.upper()
-#     url = _search(designation)
-
-#     res = requests.get(url)
-#     if res.status_code != 200:
-#         raise Exception(f"打开番号网页时出错: {res.status_code}")
-
-#     from bs4 import BeautifulSoup
-
-#     page = BeautifulSoup(res.text, "html.parser")
-
-#     info = {}
-#     info["img"] = page.find("img", class_="video-cover").get("src")
-#     info["title"] = page.find("strong", class_="current-title").text
-#     info["imgs"] = [i.get("href") for i in page.find_all("a", class_="tile-item")]
-#     info["imgs"] = [i for i in info["imgs"] if i.startswith("http")]
-    
-#     _info_nav = page.find("nav", class_="movie-panel-info")
-#     panel_blocks = _info_nav.find_all("div", class_="panel-block")[1:]
-#     info['date'] = panel_blocks[0].find("span", class_="value").text
-#     info['length'] = panel_blocks[1].find("span", class_="value").text
-#     info['director'] = panel_blocks[2].find("span", class_="value").text
-#     info['studio'] = panel_blocks[3].find("span", class_="value").text
-#     info['series'] = panel_blocks[4].find("span", class_="value").text
-#     info['rate'] = re.findall(r'\d+', panel_blocks[5].find("span", class_="value").text)[0]
-#     info['tag'] = [i.text for i in panel_blocks[6].find_all("a")]
-#     info['actor'] = []
-#     for i in panel_blocks[7].find_all("a"):
-#         href = i.get("href").split('/')[-1]
-#         info['actor'].append({'name': i.text, 'photo': PHOTO_URL.format(prefix=href[:2].lower(), actor_id=href)})
-    
-#     magnets_content = page.find("div", class_="magnet-links").find_all("div", class_="item")
-#     info['magnets'] = []
-#     for i in magnets_content:
-#         info['magnets'].append({
-#             'name': i.find('span', class_="name").text,
-#             'meta': i.find("span", class_="meta").text,
-#             'date': i.find("span", class_="time").text,
-#             'url': i.find("a").get("href")
-#         })
-
-#     # info['date'], info['length'], info['director'], info['studio'], info['series'], info['rate'], info['tag'], info['actor'] = [i.text for i in spans]
-#     info['url'] = url
-
-#     return info
-
 def is_video_suffix(filepath):
     suffix = os.path.splitext(filepath)[1]
     return suffix in ['.mp4', '.avi', '.mkv', '.wmv', '.mpg', '.mpeg', '.mov', '.rm', '.ram', '.flv', '.swf', '.3gp', '.rmvb']
