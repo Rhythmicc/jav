@@ -56,45 +56,50 @@ def generate_nfo(force: bool = False):
         os.makedirs(config.select('cache_path'))
     for root, _, files in os.walk('./'):
         for file in files:
-            if is_video_suffix(file):
-                QproDefaultConsole.print(QproInfoString, '处理: [bold magenta]' + file + '[/]')
-                designation, filename = get_video_id_info(file)
-                nfo_path = os.path.join(root, f'{filename}.nfo')
-                if os.path.exists(nfo_path) and not force:
-                    continue
-                cache_info = os.path.join(config.select('cache_path'), designation)
-                if os.path.exists(cache_info):
-                    with open(cache_info, 'rb') as f:
-                        info = pickle.load(f)
+            if not is_video_suffix(file):
+                continue
+            designation, filename = get_video_id_info(file)
+            nfo_path = os.path.join(root, f'{filename}.nfo')
+            extrafanart_path = os.path.join(root, 'extrafanart')
+            cache_info = os.path.join(config.select('cache_path'), designation)
+            _flag = True
+
+            if not os.path.exists(extrafanart_path) and not os.path.isdir(extrafanart_path):
+                os.mkdir(extrafanart_path)
+                _flag = False
+            if _flag and os.path.exists(nfo_path) and not force:
+                continue
+            QproDefaultConsole.print(QproInfoString, '处理: [bold magenta]' + file + '[/]')
+            if os.path.exists(cache_info):
+                with open(cache_info, 'rb') as f:
+                    info = pickle.load(f)
+            else:
+                info, _ = _info(designation)
+                if info:
+                    with open(cache_info, 'wb') as f:
+                        pickle.dump(info, f)
                 else:
-                    info, _ = _info(designation)
-                    if info:
-                        with open(cache_info, 'wb') as f:
-                            pickle.dump(info, f)
-                    else:
-                        QproDefaultConsole.print(QproErrorString, f'番号 {designation} 查找失败！')
-                        continue
-                with open(nfo_path, 'w', encoding='utf-8') as f:
-                    f.write(TEMPLATE.format(
-                        title=info['title'],
-                        studio=info['studio'],
-                        year=info['date'][:4],
-                        outline=info['plot'] if 'plot' in info else info['title'],
-                        length=info['length'],
-                        director=info['director'] if 'director' in info else '未知',
-                        actors='\n    '.join([ACTOR_TEMPLATE.format(name=i['name'], photo=i['photo']) for i in info['actor']]),
-                        tags='\n  '.join([f'<tag>{i}</tag>' for i in info['tag']]),
-                        genre='\n  '.join([f'<genre>{i}</genre>' for i in info['tag']]),
-                        designation=designation,
-                        date=info['date'],
-                        cover=info['img'],
-                        website=info['url'],
-                    ))
-                from QuickStart_Rhy.NetTools.MultiSingleDL import multi_single_dl
-                name_map = {
-                    info['img']: os.path.join(root, 'poster.jpg'),
-                }
-                if not os.path.exists('extrafanart') and not os.path.isdir('extrafanart'):
-                    os.mkdir('extrafanart')
-                name_map.update({i: os.path.join(root, 'extrafanart', f'extrafanart-{index + 1}.jpg') for index, i in enumerate(info['imgs'])})
-                multi_single_dl([info['img']] + info['imgs'], name_map=name_map)
+                    QproDefaultConsole.print(QproErrorString, f'番号 {designation} 查找失败！')
+                    continue
+            with open(nfo_path, 'w', encoding='utf-8') as f:
+                f.write(TEMPLATE.format(
+                    title=info['title'],
+                    studio=info['studio'],
+                    year=info['date'][:4],
+                    outline=info['plot'] if 'plot' in info else info['title'],
+                    length=info['length'],
+                    director=info['director'] if 'director' in info else '未知',
+                    actors='\n    '.join([ACTOR_TEMPLATE.format(name=i['name'], photo=i['photo']) for i in info['actor']]),
+                    tags='\n  '.join([f'<tag>{i}</tag>' for i in info['tag']]),
+                    genre='\n  '.join([f'<genre>{i}</genre>' for i in info['tag']]),
+                    designation=designation,
+                    date=info['date'],
+                    cover=info['img'],
+                    website=info['url'],
+                ))
+            from QuickStart_Rhy.NetTools.MultiSingleDL import multi_single_dl
+            name_map = {
+                info['img']: os.path.join(root, 'poster.jpg'),
+            }
+            name_map.update({i: os.path.join(root, 'extrafanart', f'extrafanart-{index + 1}.jpg') for index, i in enumerate(info['imgs'])})
+            multi_single_dl([info['img']] + info['imgs'], name_map=name_map)
