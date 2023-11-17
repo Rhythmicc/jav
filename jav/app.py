@@ -54,7 +54,9 @@ def info(designation: str, _company: str = ""):
     date = requirePackage("datetime", "datetime").strptime(info["date"], "%Y-%m-%d")
     if not info:
         return
-
+    requirePackage("QuickStart_Rhy.ImageTools.ImagePreview", "image_preview")(
+        info["img"]
+    )
     QproDefaultConsole.print(table, justify="center")
 
     from QuickProject import _ask

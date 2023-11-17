@@ -75,7 +75,6 @@ def generate_nfo(force: bool = False):
                     else:
                         QproDefaultConsole.print(QproErrorString, f'番号 {designation} 查找失败！')
                         continue
-                QproDefaultConsole.print(nfo_path)
                 with open(nfo_path, 'w', encoding='utf-8') as f:
                     f.write(TEMPLATE.format(
                         title=info['title'],
@@ -92,4 +91,12 @@ def generate_nfo(force: bool = False):
                         cover=info['img'],
                         website=info['url'],
                     ))
+                from QuickStart_Rhy.NetTools.MultiSingleDL import multi_single_dl
+                name_map = {
+                    info['img']: os.path.join(root, 'poster.jpg'),
+                }
+                if not os.path.exists('extrafanart') and not os.path.isdir('extrafanart'):
+                    os.mkdir('extrafanart')
+                name_map.update({i: os.path.join(root, 'extrafanart', f'extrafanart-{index + 1}.jpg') for index, i in enumerate(info['imgs'])})
+                multi_single_dl([info['img']] + info['imgs'], name_map=name_map)
     QproDefaultStatus.stop()
