@@ -334,7 +334,7 @@ def nfo(force: bool = False):
     """
     from .nfo import generate_nfo
 
-    generate_nfo()
+    generate_nfo(force)
 
 
 @app.command()

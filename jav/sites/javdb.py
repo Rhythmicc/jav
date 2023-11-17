@@ -93,17 +93,31 @@ def _info(designation: str):
     
     _info_nav = page.find("nav", class_="movie-panel-info")
     panel_blocks = _info_nav.find_all("div", class_="panel-block")[1:]
-    info['date'] = panel_blocks[0].find("span", class_="value").text
-    info['length'] = panel_blocks[1].find("span", class_="value").text
-    info['director'] = panel_blocks[2].find("span", class_="value").text
-    info['studio'] = panel_blocks[3].find("span", class_="value").text
-    info['series'] = panel_blocks[4].find("span", class_="value").text
-    info['rate'] = re.findall(r'\d+\.\d+', panel_blocks[5].find("span", class_="value").text)[0]
-    info['tag'] = [i.text for i in panel_blocks[6].find_all("a")]
-    info['actor'] = []
-    for i in panel_blocks[7].find_all("a"):
-        href = i.get("href").split('/')[-1]
-        info['actor'].append({'name': i.text, 'photo': PHOTO_URL.format(prefix=href[:2].lower(), actor_id=href)})
+
+    name_map = {
+        '日期:': 'date',
+        '時長:': 'length',
+        '導演:': 'director',
+        '片商:': 'studio',
+        '評分:': 'rate',
+        '類別:': 'tag',
+        '演員:': 'actor'
+    }
+
+    for info_block in panel_blocks:
+        key = info_block.find("strong")
+        if key is None:
+            continue
+        key = name_map.get(key.text, None)
+        if key is None:
+            continue
+        if key != 'actor':
+            info[key] = info_block.find("span", class_="value").text
+        else:
+            info['actor'] = []
+            for i in info_block.find_all("a"):
+                href = i.get("href").split('/')[-1]
+                info['actor'].append({'name': i.text, 'photo': PHOTO_URL.format(prefix=href[:2].lower(), actor_id=href)})
     
     magnets_content = page.find("div", class_="magnet-links").find_all("div", class_="item")
     info['magnets'] = []
