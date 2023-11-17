@@ -98,5 +98,7 @@ def generate_nfo(force: bool = False):
                 if not os.path.exists('extrafanart') and not os.path.isdir('extrafanart'):
                     os.mkdir('extrafanart')
                 name_map.update({i: os.path.join(root, 'extrafanart', f'extrafanart-{index + 1}.jpg') for index, i in enumerate(info['imgs'])})
+                QproDefaultStatus.stop()
                 multi_single_dl([info['img']] + info['imgs'], name_map=name_map)
+                QproDefaultStatus.start()
     QproDefaultStatus.stop()
