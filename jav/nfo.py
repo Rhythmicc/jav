@@ -54,11 +54,10 @@ def get_video_id_info(filename):
 def generate_nfo(force: bool = False):
     if not os.path.exists(config.select('cache_path')) and not os.path.isdir(config.select('cache_path')):
         os.makedirs(config.select('cache_path'))
-    QproDefaultStatus('扫描并生成NFO文件').start()
     for root, _, files in os.walk('./'):
         for file in files:
             if is_video_suffix(file):
-                QproDefaultStatus('正在处理: [bold magenta]' + file + '[/]')
+                QproDefaultConsole.print(QproInfoString, '处理: [bold magenta]' + file + '[/]')
                 designation, filename = get_video_id_info(file)
                 nfo_path = os.path.join(root, f'{filename}.nfo')
                 if os.path.exists(nfo_path) and not force:
@@ -98,7 +97,4 @@ def generate_nfo(force: bool = False):
                 if not os.path.exists('extrafanart') and not os.path.isdir('extrafanart'):
                     os.mkdir('extrafanart')
                 name_map.update({i: os.path.join(root, 'extrafanart', f'extrafanart-{index + 1}.jpg') for index, i in enumerate(info['imgs'])})
-                QproDefaultStatus.stop()
                 multi_single_dl([info['img']] + info['imgs'], name_map=name_map)
-                QproDefaultStatus.start()
-    QproDefaultStatus.stop()
