@@ -99,7 +99,7 @@ def generate_nfo(force: bool = False):
                 ))
             from QuickStart_Rhy.NetTools.MultiSingleDL import multi_single_dl
             name_map = {
-                info['img']: os.path.join(root, 'poster.jpg'),
+                info['img']: os.path.join(root, 'poster'),
             }
-            name_map.update({i: os.path.join(root, 'extrafanart', f'extrafanart-{index + 1}.jpg') for index, i in enumerate(info['imgs'])})
+            name_map.update({i: os.path.join(root, 'extrafanart', f'extrafanart-{index + 1}') for index, i in enumerate(info['imgs'])})
             multi_single_dl([info['img']] + info['imgs'], name_map=name_map)
