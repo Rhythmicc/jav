@@ -68,7 +68,7 @@ def generate_nfo(force: bool = False):
                     with open(cache_info, 'rb') as f:
                         info = pickle.load(f)
                 else:
-                    info = _info(designation)
+                    info, _ = _info(designation)
                     if info:
                         with open(cache_info, 'wb') as f:
                             pickle.dump(info, f)
