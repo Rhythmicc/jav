@@ -30,7 +30,7 @@ pip3 install git+https://github.com/Rhythmicc/jav.git -U
 1. [点此预览视频](https://cos.rhythmlian.cn/ImgBed/dfec21722022947a677ead76b6979d40.mp4)
 2. `jav info SSIS-464` 查询番号信息+获取下载链接
 3. 通过`jav rank`查看片商近期榜单，可在预览后选择将其添加至心愿单；（心愿单中的内容仅会在选择下载后提示删除）。
-4. 使用`jav nfo`扫描所有视频文件，自动刮削生成 nfo 文件，并下载封面图片（poster.jpg）和花絮图片（extrafanart/extrafanart-<id>.jpg）。
+4. 使用`jav nfo`扫描所有视频文件，自动刮削生成 nfo 文件，并下载封面图片（poster.jpg）和花絮图片（extrafanart/extrafanart-\<id>.jpg）。
 
 ## 开发者
 
