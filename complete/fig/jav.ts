@@ -32,12 +32,6 @@ const completionSpec: Fig.Spec = {
             ]
         },
         {
-            "name": "cover",
-            "description": "下载所有的封面",
-            "args": [],
-            "options": []
-        },
-        {
             "name": "info",
             "description": "查询番号信息和链接",
             "args": [
@@ -77,10 +71,21 @@ const completionSpec: Fig.Spec = {
             "options": []
         },
         {
-            "name": "top15",
+            "name": "top",
             "description": "查看近期榜单",
             "args": [],
             "options": []
+        },
+        {
+            "name": "nfo",
+            "description": "找到目录下所有视频文件并生成nfo",
+            "args": [],
+            "options": [
+                {
+                    "name": "--force",
+                    "description": "是否强制更新"
+                }
+            ]
         },
         {
             "name": "update",

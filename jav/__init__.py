@@ -18,8 +18,7 @@ from QuickProject import (
 from .__config__ import JavConfig
 
 config = JavConfig()
-site = config.select("site")
-sites = config.select("sites")
+site = "javdb"
 disable_translate = config.select("disable_translate")
 famous_actress = config.select("famous_actress")
 terminal_font_size = int(config.select("terminal_font_size"))
@@ -98,20 +97,12 @@ def imgsConcat(imgs_url: list):
     """
     合并图片
     """
-
-    def is_wide():
-        width = QproDefaultConsole.width
-        height = QproDefaultConsole.height
-        rate = width / height
-        return rate > 2
-
-    from io import BytesIO
+    from QuickStart_Rhy.ImageTools.ImageTools import imgsConcat as _imgsConcat
     from QuickStart_Rhy.NetTools.MultiSingleDL import multi_single_dl_content_ls
 
-    Image = requirePackage("PIL", "Image", "Pillow")
     try:
         imgs = [
-            Image.open(BytesIO(i))
+            i
             for i in multi_single_dl_content_ls(
                 imgs_url, referer=imgs_url[0].split("/")[2]
             )
@@ -121,32 +112,7 @@ def imgsConcat(imgs_url: list):
         QproDefaultConsole.print(QproErrorString, "样品图获取失败!")
         return
 
-    wide = is_wide()
-    heights_len = 4 if wide else 3
-    with QproDefaultConsole.status("拼接图片中") as st:
-        one_width = QproDefaultConsole.width // heights_len * terminal_font_size
-        imgs = [
-            i.resize((one_width, int(one_width * i.size[1] / i.size[0]))) for i in imgs
-        ]
-        imgs = sorted(imgs, key=lambda i: -i.size[0] * i.size[1])
-        heights = [0] * heights_len
-        for i in imgs:
-            heights[heights.index(min(heights))] += i.size[1]
-        if wide:
-            st.update("嗅探最佳拼接方式")
-            while max(heights) > one_width * heights_len:
-                heights_len += 1
-                heights = [0] * heights_len
-                one_width = QproDefaultConsole.width // heights_len * terminal_font_size
-                for i in imgs:
-                    heights[heights.index(min(heights))] += i.size[1]
-        result = Image.new("RGBA", (one_width * heights_len, max(heights)))
-        heights = [0] * heights_len
-        for i in imgs:
-            min_height_index = heights.index(min(heights))
-            result.paste(i, (one_width * min_height_index, heights[min_height_index]))
-            heights[min_height_index] += i.size[1]
-    return result
+    return _imgsConcat(imgs)
 
 
 def cover_func_wrapper(func):
@@ -211,7 +177,7 @@ def info_func_wrapper(func):
             raw_info = func(designation, **kwargs)
             if not raw_info:
                 QproDefaultConsole.print(
-                    QproErrorString, "番号信息获取失败: {}, 启用备用刮削器。".format(designation)
+                    QproErrorString, "番号信息获取失败: {}, 启用备用封面获取器。".format(designation)
                 )
                 from .sites import backup_img
 

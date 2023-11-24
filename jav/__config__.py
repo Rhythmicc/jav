@@ -3,16 +3,9 @@ import json
 from QuickProject import user_root, _ask, QproDefaultStatus
 
 config_path = os.path.join(user_root, ".jav", "config.json")
-sites = ["busjav", "jav321", "guru", "javgg", "javdb"]
 
 
 problems = {
-    "site": {
-        "type": "list",
-        "message": "请选择一个默认数据源",
-        "choices": sites,
-        "default": "busjav",
-    },
     "terminal_font_size": {
         "type": "input",
         "message": "请输入终端字体大小(默认为 16):",
@@ -34,18 +27,6 @@ problems = {
 }
 
 
-def ask_sites(site: str):
-    return _ask(
-        {
-            "type": "list",
-            "name": "list",
-            "message": f"请为 '{site}' 选择一个数据源",
-            "choices": sites,
-            "default": "javdb",
-        }
-    )
-
-
 def init_config():
     """
     初始化配置
@@ -58,16 +39,6 @@ def init_config():
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump(
             {
-                "site": _ask(problems["site"]),
-                "sites": {
-                    "S1 NO.1 STYLE": ask_sites("S1 NO.1 STYLE"),
-                    "Prestige": ask_sites("Prestige"),
-                    "SOD Create": ask_sites("SOD Create"),
-                    "Faleno": ask_sites("Faleno"),
-                    "MOODYZ": ask_sites("MOODYZ"),
-                    "IDEA POCKET": ask_sites("IDEA POCKET"),
-                },
-                "terminal_font_size": _ask(problems["terminal_font_size"]),
                 "famous_actress": [
                     "三上悠亜",
                     "河北彩花",
@@ -106,18 +77,6 @@ class JavConfig:
         if key not in self.config:
             if key in problems:
                 self.update(key, _ask(problems[key]))
-            elif key == "sites":
-                self.update(
-                    key,
-                    {
-                        "S1 NO.1 STYLE": ask_sites("S1 NO.1 STYLE"),
-                        "Prestige": ask_sites("Prestige"),
-                        "SOD Create": ask_sites("SOD Create"),
-                        "Faleno": ask_sites("Faleno"),
-                        "MOODYZ": ask_sites("MOODYZ"),
-                        "IDEA POCKET": ask_sites("IDEA POCKET"),
-                    },
-                )
 
         return self.config.get(key, None)
 

@@ -1,12 +1,14 @@
-from . import *
+from .. import *
 
 url = "https://jable.tv/hot/"
 
 
-def get_top15():
+def get_top():
     """
     获取热门番号
     """
+    from QuickStart_Rhy import cut_string
+
     with QproDefaultConsole.status("正在打开浏览器") as st:
         driver = getDriver()
         st.update("正在打开网页")
@@ -35,10 +37,26 @@ def get_top15():
             res.append(
                 {
                     "designation": designation,
-                    "title": title,
+                    "title": " ".join(
+                        cut_string(
+                            " ".join(title), int(QproDefaultConsole.width * 0.45)
+                        )
+                    ),
                     "actress": author,
                     "watched": watched,
                     "liked": liked,
                 }
             )
-    return sorted(res, key=lambda x: (x["liked"], x["watched"]), reverse=True)[:15]
+    return sorted(res, key=lambda x: (x["liked"], x["watched"]), reverse=True)[:15], { 
+        "watched": "🔥", 
+        "liked": "😍", 
+        "designation": "番号", 
+        "actress":"演员", 
+        "title": {"header": "标题", "justify": "left"}
+    }, {
+        "watched": "{}",
+        "liked": "{}",
+        "designation": "[bold magenta]{}[/]",
+        "actress": "[bold yellow]{}[/]",
+        "title": "{}",
+    }

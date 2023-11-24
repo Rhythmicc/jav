@@ -28,12 +28,12 @@ _jav_main() {
     local -a args
     args=(
         complete:'获取补全列表'
-        cover:'下载所有的封面'
         info:'查询番号信息和链接'
         web:'通过浏览器获取番号信息'
         rank:'查看近期榜单'
         wish:'心愿单'
-        top15:'查看近期榜单'
+        top:'查看近期榜单'
+        nfo:'找到目录下所有视频文件并生成nfo'
         update:'更新jav工具'
     )
 

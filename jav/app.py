@@ -7,18 +7,18 @@ wish_list = WishList()
 
 
 @app.command()
-def info(designation: str, _company: str = ""):
+def info(designation: str):
     """
     查询番号信息和链接
 
     :param designation: 番号
     """
     _flag = requirePackage(
-        f".sites.{site}" if not _company else f".sites.{sites[_company]}",
+        f".sites.{site}",
         "using_selenium",
     )
     _info = requirePackage(
-        f".sites.{site}" if not _company else f".sites.{sites[_company]}", "_info"
+        f".sites.{site}", "_info"
     )
 
     if _flag and not driver:
@@ -248,37 +248,25 @@ def wish():
 
 
 @app.command()
-def top15():
+def top():
     """
     查看近期榜单
     """
     from . import _ask
-    from .top15 import get_top15
-    from QuickStart_Rhy import cut_string
+    from .top_k import top_k
     from QuickStart_Rhy.TuiTools.Table import qs_default_table
 
-    infos = get_top15()
+    infos, header, style = top_k()
     closeDriver()
     if not infos:
         return
-    table = qs_default_table(
-        ["序号", "🔥", "😍", "番号", "演员", {"header": "标题", "justify": "left"}],
-        title="热门榜单\n",
-    )
+    table = qs_default_table(['序号'] + [header[i] for i in header], title="热门榜单\n")
 
     for n, info in enumerate(infos):
-        table.add_row(
-            f"[bold cyan]{n + 1}[/bold cyan]",
-            str(info["watched"]),
-            str(info["liked"]),
-            f'[bold magenta]{info["designation"]}[/bold magenta]',
-            f'[bold yellow]{info["actress"]}[/bold yellow]',
-            " ".join(
-                cut_string(
-                    " ".join(info["title"]), int(QproDefaultConsole.width * 0.45)
-                )
-            ),
-        )
+        line = [f"[bold cyan]{n + 1}[/bold cyan]"]
+        for item in header:
+            line.append(style[item].format(info[item]))
+        table.add_row(*line)
 
     while True:
         QproDefaultConsole.print(table, justify="center")
