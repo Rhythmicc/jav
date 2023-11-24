@@ -181,7 +181,7 @@ def rank(enable_translate: bool = False):
         else:
             info = infos[int(index) - 1]
             QproDefaultConsole.print(QproInfoString, info["designation"])
-            downloadable = app.real_call("info", info["designation"], company)
+            downloadable = app.real_call("info", info["designation"])
             if (
                 not downloadable
                 and info["designation"] not in wish_list.get_list()
