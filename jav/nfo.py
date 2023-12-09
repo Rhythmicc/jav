@@ -48,7 +48,7 @@ def is_video_suffix(filepath):
 
 def get_video_id_info(filename):
     filename = os.path.splitext(filename)[0]
-    designation = re.findall(r'([a-zA-Z]{2,5})-?(\d{2,5})', filename.upper())[0]
+    designation = re.findall(r'([a-zA-Z]{2,5})-?(\d{2,5})', filename.split('@')[-1].upper())[0]
     return '-'.join(designation), filename
 
 def get_info(designation):
