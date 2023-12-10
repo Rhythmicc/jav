@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "jav"
+version = "0.0.18"
+description = "A JAV Utils"
+authors = ["Rhythmicc <rhythmlian.cn@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+qpro = "^0.12.10"
+QuickStart-Rhy = "^0.7.13"
+pyperclip = "^1.8.2"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.2"
+
+[tool.poetry.scripts]
+jav = "jav.app:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
