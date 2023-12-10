@@ -85,7 +85,7 @@ def generate_nfo(force: bool = False):
                 with open(nfo_path, 'w', encoding='utf-8') as f:
                     f.write(TEMPLATE.format(
                         title=info['title'],
-                        studio=info['studio'],
+                        studio=info['studio'] if 'studio' in info else '未知',
                         year=info['date'][:4],
                         outline=info['plot'] if 'plot' in info else info['title'],
                         length=info['length'],
