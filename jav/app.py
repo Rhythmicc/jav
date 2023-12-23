@@ -64,17 +64,17 @@ def info(designation: str):
             "{id} | {name} | {meta} | {date}".format(**magnet_info)
             for magnet_info in info["magnets"]
         ] + ["0 退出"]
-        initail = True
+        initial = True
         while res := _ask(
             {
                 "type": "list",
                 "message": "请选择下载链接",
                 "name": "magnet",
                 "choices": choices,
-                "default": choices[0] if initail else choices[-1],
+                "default": choices[0] if initial else choices[-1],
             }
         ):
-            initail = False
+            initial = False
             if res == "0 退出":
                 break
             url = info["magnets"][int(res.split()[0]) - 1]["url"]

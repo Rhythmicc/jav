@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jav"
-version = "0.0.18"
+version = "0.0.19"
 description = "A JAV Utils"
 authors = ["Rhythmicc <rhythmlian.cn@gmail.com>"]
 license = "MIT"

@@ -24,6 +24,34 @@ problems = {
     "remote_url": {"type": "input", "message": "请输入远程浏览器URL (无则跳过):"},
     "remote_proxy": {"type": "input", "message": "请输入代理地址 (无则跳过):"},
     "cache_path": {'type': 'input', 'message': '请输入缓存路径(默认为 ~/.jav/cache):', 'default': os.path.join(user_root, '.jav', 'cache')},
+    "movie_path": [
+        {
+            "type": "input",
+            "name": "username",
+            "message": "用户名",
+        },
+        {
+            "type": "input",
+            "name": "host",
+            "message": "服务器",
+        },
+        {
+            "type": "input",
+            "name": "port",
+            "message": "端口",
+            "default": "22",
+        },
+        {
+            "type": "password",
+            "name": "password",
+            "message": "密码",
+        },
+        {
+            "type": "input",
+            "name": "path",
+            "message": "路径",
+        },
+    ]
 }
 
 
