@@ -23,7 +23,11 @@ problems = {
     },
     "remote_url": {"type": "input", "message": "请输入远程浏览器URL (无则跳过):"},
     "remote_proxy": {"type": "input", "message": "请输入代理地址 (无则跳过):"},
-    "cache_path": {'type': 'input', 'message': '请输入缓存路径(默认为 ~/.jav/cache):', 'default': os.path.join(user_root, '.jav', 'cache')},
+    "cache_path": {
+        "type": "input",
+        "message": "请输入缓存路径(默认为 ~/.jav/cache):",
+        "default": os.path.join(user_root, ".jav", "cache"),
+    },
     "movie_path": [
         {
             "type": "input",
@@ -51,7 +55,7 @@ problems = {
             "name": "path",
             "message": "路径",
         },
-    ]
+    ],
 }
 
 

@@ -51,22 +51,28 @@ def get_top():
         res.append(
             {
                 "designation": designation.split()[0],
-                "title": " ".join(cut_string(title, int(QproDefaultConsole.width * 0.45))),
+                "title": " ".join(
+                    cut_string(title, int(QproDefaultConsole.width * 0.45))
+                ),
                 "actress": actress,
                 "studio": studio,
                 "date": date,
             }
         )
-    return res, {
-        "date": "发行日期",
-        "designation": "番号",
-        "title": {"header": "标题", "justify": "left"},
-        "actress": "演员",
-        "studio": "厂牌",
-    }, {
-        "date": "{}",
-        "designation": "[bold magenta]{}[/]",
-        "title": "{}",
-        "actress": "[bold yellow]{}[/]",
-        "studio": "[bold green]{}[/]",
-    }
+    return (
+        res,
+        {
+            "date": "发行日期",
+            "designation": "番号",
+            "title": {"header": "标题", "justify": "left"},
+            "actress": "演员",
+            "studio": "厂牌",
+        },
+        {
+            "date": "{}",
+            "designation": "[bold magenta]{}[/]",
+            "title": "{}",
+            "actress": "[bold yellow]{}[/]",
+            "studio": "[bold green]{}[/]",
+        },
+    )

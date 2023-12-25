@@ -12,7 +12,7 @@ from QuickProject import (
     user_lang,
     user_pip,
     external_exec,
-    QproDefaultStatus
+    QproDefaultStatus,
 )
 
 from .__config__ import JavConfig
@@ -25,6 +25,7 @@ terminal_font_size = int(config.select("terminal_font_size"))
 ssh_config = None
 
 info_baseUrl = "https://javtxt.com"
+
 
 def requirePackage(
     pname: str,
@@ -115,37 +116,56 @@ def imgsConcat(imgs_url: list):
 
     return _imgsConcat(imgs)
 
+
 def make_ssh_connect(movie_path):
     global ssh_config
 
-    if not (movie_path['username'] or movie_path['host']):
+    if not (movie_path["username"] or movie_path["host"]):
         return None
     if not ssh_config:
         from paramiko.config import SSHConfig
+
         ssh_config = SSHConfig()
-        with open(os.path.expanduser('~/.ssh/config')) as f:
+        with open(os.path.expanduser("~/.ssh/config")) as f:
             ssh_config.parse(f)
-    
-    default_identityfile = os.path.expanduser('~/.ssh/id_rsa')
+
+    default_identityfile = os.path.expanduser("~/.ssh/id_rsa")
     if not os.path.exists(default_identityfile):
         default_identityfile = None
 
     import paramiko
+
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    host = ssh_config.lookup(movie_path['host'])
+    host = ssh_config.lookup(movie_path["host"])
     if host:
-        ssh.connect(hostname=host.get('hostname'), port=int(host.get('port')), username=host.get('user'), password=host.get('password'), key_filename=host.get('identityfile', default_identityfile))
+        ssh.connect(
+            hostname=host.get("hostname"),
+            port=int(host.get("port")),
+            username=host.get("user"),
+            password=host.get("password"),
+            key_filename=host.get("identityfile", default_identityfile),
+        )
     else:
-        ssh.connect(hostname=movie_path['host'], port=int(movie_path['port']), username=movie_path['username'], password=movie_path['password'], key_filename=default_identityfile)
+        ssh.connect(
+            hostname=movie_path["host"],
+            port=int(movie_path["port"]),
+            username=movie_path["username"],
+            password=movie_path["password"],
+            key_filename=default_identityfile,
+        )
     return ssh
 
+
 def checkExist(designation):
-    movie_path = config.select('movie_path')
+    movie_path = config.select("movie_path")
+    cmd = f'fd -i --type f --extension mp4 {designation} {movie_path["path"]}'
     if ssh := make_ssh_connect(movie_path):
-        cmd = f'fd -i --type f --extension mp4 {designation} {movie_path["path"]}'
         _, stdout, _ = ssh.exec_command(cmd)
-        return stdout.read().decode('utf-8').strip() != ''
+        return stdout.read().decode("utf-8").strip() != ""
+    else:
+        return os.popen(cmd).read().strip() != ""
+
 
 def cover_func_wrapper(func):
     """
@@ -242,7 +262,14 @@ def info_func_wrapper(func):
                         {"header": "关键词", "justify": "left"},
                         {"header": "描述", "justify": "left"},
                     ],
-                    title= ('[bold green]✔[/]' if checkExist(designation) else '[bold red]◯[/]') + ' ' + raw_info["title"] + "\n",
+                    title=(
+                        "[bold green]✔[/]"
+                        if checkExist(designation)
+                        else "[bold red]◯[/]"
+                    )
+                    + " "
+                    + raw_info["title"]
+                    + "\n",
                 )
 
                 st.update("准备展示")
@@ -294,6 +321,7 @@ def getRemoteDriver():
 
     if _driver is None:
         from selenium import webdriver
+
         options = webdriver.ChromeOptions()
         options.add_argument("--proxy-server={}".format(config.select("remote_proxy")))
 

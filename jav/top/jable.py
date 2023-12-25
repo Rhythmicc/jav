@@ -47,16 +47,20 @@ def get_top():
                     "liked": liked,
                 }
             )
-    return sorted(res, key=lambda x: (x["liked"], x["watched"]), reverse=True)[:15], { 
-        "watched": "🔥", 
-        "liked": "😍", 
-        "designation": "番号", 
-        "actress":"演员", 
-        "title": {"header": "标题", "justify": "left"}
-    }, {
-        "watched": "{}",
-        "liked": "{}",
-        "designation": "[bold magenta]{}[/]",
-        "actress": "[bold yellow]{}[/]",
-        "title": "{}",
-    }
+    return (
+        sorted(res, key=lambda x: (x["liked"], x["watched"]), reverse=True)[:15],
+        {
+            "watched": "🔥",
+            "liked": "😍",
+            "designation": "番号",
+            "actress": "演员",
+            "title": {"header": "标题", "justify": "left"},
+        },
+        {
+            "watched": "{}",
+            "liked": "{}",
+            "designation": "[bold magenta]{}[/]",
+            "actress": "[bold yellow]{}[/]",
+            "title": "{}",
+        },
+    )

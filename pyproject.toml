@@ -13,6 +13,7 @@ QuickStart-Rhy = "^0.7.13"
 pyperclip = "^1.8.2"
 requests = "^2.31.0"
 beautifulsoup4 = "^4.12.2"
+paramiko = "^3.4.0"
 
 [tool.poetry.scripts]
 jav = "jav.app:main"

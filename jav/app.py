@@ -17,9 +17,7 @@ def info(designation: str):
         f".sites.{site}",
         "using_selenium",
     )
-    _info = requirePackage(
-        f".sites.{site}", "_info"
-    )
+    _info = requirePackage(f".sites.{site}", "_info")
 
     if _flag and not driver:
         driver = getDriver()
@@ -263,7 +261,7 @@ def top():
     closeDriver()
     if not infos:
         return
-    table = qs_default_table(['序号'] + [header[i] for i in header], title="热门榜单\n")
+    table = qs_default_table(["序号"] + [header[i] for i in header], title="热门榜单\n")
 
     for n, info in enumerate(infos):
         line = [f"[bold cyan]{n + 1}[/bold cyan]"]
