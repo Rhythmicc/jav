@@ -4,7 +4,7 @@ from .. import _ask
 url = "https://javdb.com/rankings/movies?p={days}&t=censored"
 
 
-def get_top(time_during: str = "week"):
+def get_top():
     """
     获取热门番号
 
@@ -23,6 +23,14 @@ def get_top(time_during: str = "week"):
             "default": "weekly",
         }
     )
+    translate = _ask({
+        "type": "confirm",
+        "name": "translate",
+        "message": "是否翻译标题?",
+        "default": True,
+    })
+    if translate:
+        from QuickStart_Rhy.apiTools import translate as _translate
     from QuickStart_Rhy import cut_string
     from .. import requests
     from bs4 import BeautifulSoup
@@ -31,17 +39,21 @@ def get_top(time_during: str = "week"):
     soup = BeautifulSoup(html_text, "html.parser")
 
     res = []
-    for div in soup.find_all("div", class_="item")[:30]:
+    for _id, div in enumerate(soup.find_all("div", class_="item")[:30]):
         date = div.find("div", class_="meta").text.strip()
         designation = div.find("strong").text.strip()
         title = div.find("div", class_="video-title").text.strip()
         title = " ".join(title.split()[1:])
+        if translate:
+            QproDefaultStatus(f"翻译第 {_id + 1} 项标题: \"{title}\"").start()
+            title = _translate(title)
+            QproDefaultStatus.stop()
         score = div.find("span", class_="value").text.strip()
         score, watched = re.findall(r"([0-9]*\.?[0-9]+)?分.*?(\d+)人", score)[0]
 
         res.append(
             {
-                "date": date,
+                "date": date if is_before_today(date) else f"[red]{date}[/]",
                 "designation": designation.split()[0],
                 "title": " ".join(
                     cut_string(title, int(QproDefaultConsole.width * 0.7))

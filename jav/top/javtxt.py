@@ -56,7 +56,7 @@ def get_top():
                 ),
                 "actress": actress,
                 "studio": studio,
-                "date": date,
+                "date": date if is_before_today(date) else f"[red]{date}[/]",
             }
         )
     return (

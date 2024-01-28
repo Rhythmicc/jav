@@ -26,6 +26,15 @@ ssh_config = None
 
 info_baseUrl = "https://javtxt.com"
 
+def is_before_today(date: str):
+    """
+    判断日期是否在今天之前
+
+    :param date: 日期
+    """
+    from datetime import datetime
+
+    return datetime.strptime(date, "%Y-%m-%d") <= datetime.today()
 
 def requirePackage(
     pname: str,
@@ -295,6 +304,7 @@ def info_func_wrapper(func):
             return raw_info, table
         except Exception as e:
             QproDefaultConsole.print(QproErrorString, "出现错误: {}".format(e))
+            QproDefaultConsole.print_exception()
             return raw_info, None
 
     return wrapper
