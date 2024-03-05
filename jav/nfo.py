@@ -100,8 +100,9 @@ def scan_path(movie_path):
     iterate all video files in movie_path
     """
     if ssh := make_ssh_connect(movie_path):
-        ssh.exec_command(f'cd {movie_path["path"]}; jav nfo')
+        _, o, e = ssh.exec_command('jav nfo')
         QproDefaultConsole.print(QproInfoString, "刮削任务已提交")
+        QproDefaultConsole.print(QproInfoString, o.read().decode("utf-8"))
         return iter(())
     else:
         return ftp_scan(os, movie_path["path"])
@@ -167,7 +168,8 @@ def generate_nfo(force: bool = False):
         ):
             if not (info := get_info(designation)):
                 continue
-            os.mkdir(extrafanart_path)
+            if not os.path.exists(extrafanart_path) and not os.path.isdir(extrafanart_path):
+                os.mkdir(extrafanart_path)
             from QuickStart_Rhy.NetTools.MultiSingleDL import multi_single_dl
 
             name_map = {
