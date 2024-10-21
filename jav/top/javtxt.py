@@ -25,7 +25,8 @@ def get_top():
             "default": "7",
         }
     )
-    from QuickStart_Rhy import cut_string
+    from QuickStart_Rhy import wrap_text_preserve_links
+    from QuickStart_Rhy.apiTools import translate
     from .. import requests
     from bs4 import BeautifulSoup
 
@@ -34,31 +35,33 @@ def get_top():
     a_s = soup.find_all("a", class_="work")[:15]
 
     res = []
-    for a in a_s:
-        designation = a.find("h4", class_="work-id").text.strip()
-        title = a.find("h4", class_="work-title").text.strip()
-        actress = a.find("span", class_="work-actress")
-        if actress:
-            actress = actress.text.strip()
-            _flag = 1
-        else:
-            actress = "未知"
-            _flag = 0
-        _ls = a.find_all("span")
-        studio = _ls[_flag + 0].text.strip()
-        date = _ls[_flag + 1].text.strip()
+    with QproDefaultStatus("正在获取热门番号"):
+        total = len(a_s)
+        for _id, a in enumerate(a_s):
+            designation = a.find("h4", class_="work-id").text.strip().split()[0]
+            QproDefaultStatus(f"[{_id + 1}/{total}] 正在获取: " + designation)
+            title = translate(a.find("h4", class_="work-title").text.strip())
+            actress = a.find("span", class_="work-actress")
+            if actress:
+                actress = actress.text.strip()
+                _flag = 1
+            else:
+                actress = "未知"
+                _flag = 0
+            _ls = a.find_all("span")
+            studio = _ls[_flag + 0].text.strip()
+            date = _ls[_flag + 1].text.strip()
 
-        res.append(
-            {
-                "designation": designation.split()[0],
-                "title": " ".join(
-                    cut_string(title, int(QproDefaultConsole.width * 0.45))
-                ),
-                "actress": actress,
-                "studio": studio,
-                "date": date if is_before_today(date[1:].strip()) else f"[red]{date}[/]",
-            }
-        )
+            res.append(
+                {
+                    "designation": designation,
+                    "title": wrap_text_preserve_links(title, int(QproDefaultConsole.width * 0.3)),
+                    "actress": actress,
+                    "studio": studio,
+                    "date": date if is_before_today(date[1:].strip()) else f"[red]{date}[/]",
+                }
+            )
+
     return (
         res,
         {

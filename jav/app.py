@@ -5,7 +5,6 @@ from QuickProject.Commander import Commander
 app = Commander("jav", True)
 wish_list = WishList()
 
-
 @app.command()
 def info(designation: str):
     """
@@ -61,9 +60,9 @@ def info(designation: str):
         choices = [
             "{id} | {name} | {meta} | {date}".format(**magnet_info)
             for magnet_info in info["magnets"]
-        ] + ["0 退出"]
+        ]
         initial = True
-        while res := _ask(
+        if res := _ask(
             {
                 "type": "list",
                 "message": "请选择下载链接",
@@ -73,11 +72,23 @@ def info(designation: str):
             }
         ):
             initial = False
-            if res == "0 退出":
-                break
             url = info["magnets"][int(res.split()[0]) - 1]["url"]
-            requirePackage("pyperclip", "copy")(url)
-            QproDefaultConsole.print(QproInfoString, "已复制到剪贴板:", url)
+            downloader = config.select("downloader")
+            if not downloader:
+                requirePackage("pyperclip", "copy")(url)
+                QproDefaultConsole.print(QproInfoString, "已复制到剪贴板:", url)
+            else:
+                import time
+                from selenium.webdriver.common.by import By
+                driver = getLocalDriver()
+                driver.get(downloader)
+                # wait for page to load
+                time.sleep(2)                
+                driver.find_element(By.CLASS_NAME, "create__task").click()
+                driver.find_element(By.CLASS_NAME, 'el-textarea__inner').send_keys(url)
+                driver.find_element(By.CLASS_NAME, "task-parse-btn").click()
+                time.sleep(0.5)
+                driver.find_element(By.CLASS_NAME, "task-parse-btn").click()
 
         if designation in wish_list.get_list() and _ask(
             {

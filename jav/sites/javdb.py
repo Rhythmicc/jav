@@ -84,6 +84,7 @@ def _info(designation: str):
     # !    'actor': [{'name': '', 'photo': '头像链接'}],
     # !    'magnets': [{'id': '1~n', 'name': '文件名', 'meta': '空间', 'date': '发布日期', 'url': '磁力链'}]
     # ! }，（'plot' 和 'date' 会自动生成。）
+    from QuickStart_Rhy.apiTools import translate
     PHOTO_URL = "https://c0.jdbstatic.com/avatars/{prefix}/{actor_id}.jpg"
     designation = designation.upper()
     url = _search(designation)
@@ -98,7 +99,7 @@ def _info(designation: str):
 
     info = {}
     info["img"] = page.find("img", class_="video-cover").get("src")
-    info["title"] = page.find("strong", class_="current-title").text
+    info["title"] = translate(page.find("strong", class_="current-title").text)
     info["imgs"] = [i.get("href") for i in page.find_all("a", class_="tile-item")]
     info["imgs"] = [i for i in info["imgs"] if i.startswith("http")]
 

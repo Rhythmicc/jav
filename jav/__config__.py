@@ -56,6 +56,10 @@ problems = {
             "message": "路径",
         },
     ],
+    "downloader": {
+        'type': 'input',
+        'message': '请输入迅雷(Docker版) URL',
+    }
 }
 
 
