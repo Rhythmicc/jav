@@ -30,7 +30,7 @@ def get_top():
         "default": True,
     })
     if translate:
-        from QuickStart_Rhy.apiTools import translate as _translate
+        from .. import translate as _translate
     from QuickStart_Rhy import cut_string
     from .. import requests
     from bs4 import BeautifulSoup

@@ -26,8 +26,7 @@ def get_top():
         }
     )
     from QuickStart_Rhy import wrap_text_preserve_links
-    from QuickStart_Rhy.apiTools import translate
-    from .. import requests
+    from .. import requests, translate
     from bs4 import BeautifulSoup
 
     html_text = requests.get(url + f"/{days}-days").text

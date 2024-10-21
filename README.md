@@ -2,7 +2,9 @@
 
 ## 注意事项
 
-1. 本项目中的翻译引擎依赖于[QuickStart_Rhy](https://github.com/Rhythmicc/qs)（简称 qs）中配置的默认翻译引擎，初次使用`qs`会自动引导配置，您可以选择使用[DeepLX](https://github.com/OwO-Network/DeepLX)（免费的 DeepL），qs 支持多 DeepLX 服务的负载均衡，当然没有自建的 DeepLX 服务也不用担心，qs 也会通过本机调用 DeepLX 翻译，或者你有 DeepL 的 API 也可以使用；如果你不想使用`qs`，可以自行修改 main.py 中的 translate 函数。
+1. 翻译引擎
+   1. 默认依赖于[QuickStart_Rhy](https://github.com/Rhythmicc/qs)（简称 qs）中配置的默认翻译引擎，初次使用`qs`会自动引导配置，支持AI翻译、[DeepLX](https://github.com/OwO-Network/DeepLX)（免费的 DeepL）等；
+   2. 如果不想使用`qs`，可以自行修改 main.py 中的 translate 函数。
 2. 终端内图片预览只支持  系统配合[iTerm2](https://iterm2.com/)使用。
 3. **请勿在墙内宣传本项目!**
 
