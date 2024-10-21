@@ -317,12 +317,7 @@ def getLocalDriver():
     global _driver
 
     if _driver is None:
-        from selenium import webdriver
-
-        # options = webdriver.ChromeOptions()
-        # options.add_argument("headless")
-
-        _driver = webdriver.Chrome()
+        _driver = requirePackage("selenium.webdriver", "Chrome")()
     return _driver
 
 
@@ -330,8 +325,7 @@ def getRemoteDriver():
     global _driver
 
     if _driver is None:
-        from selenium import webdriver
-
+        webdriver = requirePackage("selenium", "webdriver")
         options = webdriver.ChromeOptions()
         options.add_argument("--proxy-server={}".format(config.select("remote_proxy")))
 
