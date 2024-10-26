@@ -14,7 +14,9 @@
 pip3 install git+https://github.com/Rhythmicc/jav.git -U
 ```
 
-初次运行`jav`会自动引导配置，配置文件位于`~/.jav/config.json`。然后你需要手动设置`~/.jav/config.json`中的`movie_path`选项，填入媒体库的SSH信息。
+注意：初次运行`jav`会自动引导配置，配置文件位于`~/.jav/config.json`，你需要手动设置`~/.jav/config.json`中的`movie_path`选项，填入媒体库的SSH信息。
+
+（为了更好的观感，建议将iTerm2的尺寸设置为竖屏。）
 
 支持迅雷下载（依赖selenium和chromedriver）：
 
