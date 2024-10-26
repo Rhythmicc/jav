@@ -28,34 +28,6 @@ problems = {
         "message": "请输入缓存路径(默认为 ~/.jav/cache):",
         "default": os.path.join(user_root, ".jav", "cache"),
     },
-    "movie_path": [
-        {
-            "type": "input",
-            "name": "username",
-            "message": "用户名",
-        },
-        {
-            "type": "input",
-            "name": "host",
-            "message": "服务器",
-        },
-        {
-            "type": "input",
-            "name": "port",
-            "message": "端口",
-            "default": "22",
-        },
-        {
-            "type": "password",
-            "name": "password",
-            "message": "密码",
-        },
-        {
-            "type": "input",
-            "name": "path",
-            "message": "路径",
-        },
-    ],
     "downloader": {
         'type': 'input',
         'message': '请输入迅雷(Docker版) URL',
@@ -95,12 +67,18 @@ def init_config():
                 "disable_translate": _ask(problems["disable_translate"]),
                 "remote_url": _ask(problems["remote_url"]),
                 "cache_path": os.path.join(user_root, ".jav", "cache"),
+                "movie_path": {
+                    'username': '',
+                    'host': '',
+                    'port': 22,
+                    'password': '',
+                    'path': '',
+                }
             },
             f,
             ensure_ascii=False,
             indent=4,
         )
-
 
 class JavConfig:
     def __init__(self) -> None:
@@ -110,10 +88,8 @@ class JavConfig:
             self.config = json.load(f)
 
     def select(self, key):
-        if key not in self.config:
-            if key in problems:
-                self.update(key, _ask(problems[key]))
-
+        if key not in self.config and key in problems:
+            self.update(key, _ask(problems[key]))
         return self.config.get(key, None)
 
     def update(self, key, value):

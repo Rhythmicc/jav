@@ -91,7 +91,18 @@ def ftp_scan(ftp, path):
         for file in files:
             if not is_video_suffix(file):
                 continue
-            designation, filename = get_video_id_info(file)
+            try:
+                designation, filename = get_video_id_info(file)
+            except:
+                QproDefaultConsole.print(QproErrorString, f"文件名格式错误: {file}")
+                from . import _ask
+                
+                if _ask({
+                    'type': 'confirm',
+                    'message': '是否删除此文件?',
+                    'default': True
+                }):
+                    ftp.remove(os.path.join(root, file))
             yield root, designation, file, filename
 
 

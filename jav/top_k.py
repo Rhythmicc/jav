@@ -9,7 +9,7 @@ def top_k():
                     "type": "list",
                     "message": "请选择站点",
                     "choices": ["javtxt", "jable", "javdb"],
-                    "default": "javdb",
+                    "default": "javtxt",
                 }
             )
         ),

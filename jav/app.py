@@ -41,18 +41,6 @@ def info(designation: str):
         requirePackage("QuickStart_Rhy.ImageTools.ImagePreview", "image_preview")(
             img_concated
         )
-        if _ask(
-            {
-                "type": "confirm",
-                "name": "confirm",
-                "message": f"是否保存样品图片?",
-                "default": False,
-            }
-        ):
-            img_concated.save(f"{designation}_samples.png")
-            QproDefaultConsole.print(
-                QproInfoString, f'已保存为: "{designation}_samples.png"'
-            )
     cur_date = requirePackage("datetime", "datetime").now()
     if cur_date > date and _ask(
         {"type": "confirm", "name": "confirm", "message": "是否下载?"}

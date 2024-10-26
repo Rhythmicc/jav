@@ -14,7 +14,9 @@
 pip3 install git+https://github.com/Rhythmicc/jav.git -U
 ```
 
-支持迅雷下载：
+初次运行`jav`会自动引导配置，配置文件位于`~/.jav/config.json`。然后你需要手动设置`~/.jav/config.json`中的`movie_path`选项，填入媒体库的SSH信息。
+
+支持迅雷下载（依赖selenium和chromedriver）：
 
 1. 先在服务器上跑个迅雷的 Docker
    ```yaml
