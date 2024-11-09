@@ -1,10 +1,27 @@
+[build-system]
+requires = [ "poetry-core",]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "jav"
 version = "0.0.20"
 description = "A JAV Utils"
-authors = ["Rhythmicc <rhythmlian.cn@gmail.com>"]
+authors = [ "Rhythmicc <rhythmlian.cn@gmail.com>",]
 license = "MIT"
 readme = "README.md"
+
+[tool.qpro]
+[[tool.qpro.server_targets]]
+user = "lianhaocheng"
+host = "localhost"
+port = 22
+path = "/opt/homebrew/lib/python3.11/site-packages/"
+
+[[tool.qpro.server_targets]]
+user = ""
+host = "hc-server"
+port = 18022
+path = "/usr/local/lib/python3.10/dist-packages/"
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -18,6 +35,10 @@ paramiko = "^3.4.0"
 [tool.poetry.scripts]
 jav = "jav.app:main"
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.qpro.config]
+build = ""
+entry_point = "app.py"
+executable = "python3 -m jav.app"
+input_file = "dist/input.txt"
+template_root = "template/"
+enable_complete = true

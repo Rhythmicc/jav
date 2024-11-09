@@ -71,12 +71,16 @@ def info(designation: str):
                 driver = getLocalDriver()
                 driver.get(downloader)
                 # wait for page to load
-                time.sleep(2)                
-                driver.find_element(By.CLASS_NAME, "create__task").click()
-                driver.find_element(By.CLASS_NAME, 'el-textarea__inner').send_keys(url)
-                driver.find_element(By.CLASS_NAME, "task-parse-btn").click()
-                time.sleep(0.5)
-                driver.find_element(By.CLASS_NAME, "task-parse-btn").click()
+                try:
+                    time.sleep(1)
+                    driver.find_element(By.CLASS_NAME, "create__task").click()
+                    driver.find_element(By.CLASS_NAME, 'el-textarea__inner').send_keys(url)
+                    driver.find_element(By.CLASS_NAME, "task-parse-btn").click()
+                    time.sleep(1)
+                    driver.find_element(By.CLASS_NAME, "task-parse-btn").click()
+                    time.sleep(0.5)
+                except:
+                    QproDefaultConsole.print(QproErrorString, "任务添加失败:", url)
 
         if designation in wish_list.get_list() and _ask(
             {
