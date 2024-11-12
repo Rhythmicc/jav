@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "jav"
-version = "0.0.20"
+version = "0.0.21"
 description = "A JAV Utils"
 authors = [ "Rhythmicc <rhythmlian.cn@gmail.com>",]
 license = "MIT"
