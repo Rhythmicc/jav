@@ -168,7 +168,7 @@ def make_ssh_connect(movie_path):
 
 def checkExist(designation):
     movie_path = config.select("movie_path")
-    if not movie_path["path"]:
+    if movie_path.get('path', None) is None:
         return False
     cmd = f'fd -i --type f --extension mp4 {designation} {movie_path["path"]}'
     if ssh := make_ssh_connect(movie_path):
