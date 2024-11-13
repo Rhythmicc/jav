@@ -5,6 +5,15 @@ from QuickProject.Commander import Commander
 app = Commander("jav", True)
 wish_list = WishList()
 
+def webdriver_wait_class(driver, class_name, timeout=10):
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+
+    return WebDriverWait(driver, timeout).until(
+        EC.presence_of_element_located((By.CLASS_NAME, class_name)) # 等待元素加载
+    )
+
 @app.command()
 def info(designation: str):
     """
@@ -72,15 +81,16 @@ def info(designation: str):
                 driver.get(downloader)
                 # wait for page to load
                 try:
-                    time.sleep(1)
+                    webdriver_wait_class(driver, "create__task", 10)
                     driver.find_element(By.CLASS_NAME, "create__task").click()
                     driver.find_element(By.CLASS_NAME, 'el-textarea__inner').send_keys(url)
                     driver.find_element(By.CLASS_NAME, "task-parse-btn").click()
-                    time.sleep(1)
+                    webdriver_wait_class(driver, "result-nas-task-dialog_footer", 10)
                     driver.find_element(By.CLASS_NAME, "task-parse-btn").click()
                     time.sleep(0.5)
                 except:
                     QproDefaultConsole.print(QproErrorString, "任务添加失败:", url)
+                    QproDefaultConsole.print_exception()
 
         if designation in wish_list.get_list() and _ask(
             {
