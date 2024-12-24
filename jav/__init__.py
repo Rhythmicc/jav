@@ -55,8 +55,9 @@ def requirePackage(
     :param not_exit: 安装后不退出
     :return: 库或模块的地址
     """
+    local_scope = {}
     try:
-        exec(f"from {pname} import {module}" if module else f"import {pname}")
+        exec((f"from {pname} import {module}" if module else f"import {pname}"), globals(), local_scope)
     except (ModuleNotFoundError, ImportError):
         if not_ask:
             return None
@@ -77,7 +78,7 @@ def requirePackage(
                     True,
                 )
             if not_exit:
-                exec(f"from {pname} import {module}" if module else f"import {pname}")
+                exec((f"from {pname} import {module}" if module else f"import {pname}"), globals(), local_scope)
             else:
                 QproDefaultConsole.print(
                     QproInfoString, f'just run again: "{" ".join(sys.argv)}"'
@@ -86,7 +87,7 @@ def requirePackage(
         else:
             exit(-1)
     finally:
-        return eval(f"{module if module else pname}")
+        return local_scope.get(module if module else pname)
 
 
 def translate(content):
