@@ -25,8 +25,8 @@ path = "/usr/local/lib/python3.10/dist-packages/"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-qpro = "^0.12.10"
-QuickStart-Rhy = "^0.7.13"
+qpro = "^0.13.5"
+QuickStart-Rhy = "^0.7.33"
 pyperclip = "^1.8.2"
 requests = "^2.31.0"
 beautifulsoup4 = "^4.12.2"
