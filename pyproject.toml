@@ -15,7 +15,7 @@ readme = "README.md"
 user = "lianhaocheng"
 host = "localhost"
 port = 22
-path = "/opt/homebrew/lib/python3.11/site-packages/"
+path = "/opt/homebrew/lib/python3.13/site-packages/"
 
 [[tool.qpro.server_targets]]
 user = ""
