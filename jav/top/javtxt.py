@@ -10,20 +10,6 @@ def last_year():
     return f"/{datetime.now().year - 1}"
 
 
-def parse_cn_title_and_abstract(url):
-    from .. import requests
-    from bs4 import BeautifulSoup
-
-    html_text = requests.get(url).text
-    soup = BeautifulSoup(html_text, "html.parser")
-
-    title = soup.find("h2", class_="text-zh").text.strip()
-    info = soup.find("div", class_="text-zh")
-    abstract = info.find("p").text.strip()
-
-    return title, abstract
-
-
 def parse_cn_title(url):
     from .. import requests
     from bs4 import BeautifulSoup
@@ -33,6 +19,7 @@ def parse_cn_title(url):
     title = soup.find("h2", class_="text-zh").text.strip()
 
     return title
+
 
 def parallel_parse_title(a_s):
     from QuickStart_Rhy.TuiTools.Bar import NormalProgressBar
@@ -51,6 +38,7 @@ def parallel_parse_title(a_s):
         res_ls = list(executor.map(parse_title, a_s))
     progress.stop()
     return res_ls
+
 
 def get_top():
     """
@@ -88,7 +76,6 @@ def get_top():
         for _id, a in enumerate(a_s):
             designation = a.find("h4", class_="work-id").text.strip().split()[0]
             QproDefaultStatus(f"[{_id + 1}/{total}] 正在获取: " + designation)
-            # title = parse_cn_title(f'{root_url}/{a["href"]}')
             title = titles[_id]
             actress = a.find("span", class_="work-actress")
             if actress:
