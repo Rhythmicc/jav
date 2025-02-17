@@ -15,7 +15,7 @@ def webdriver_wait_class(driver, class_name, timeout=10):
     )
 
 @app.command()
-def info(designation: str):
+def info(designation: str, _title: str = ''):
     """
     查询番号信息和链接
 
@@ -32,7 +32,7 @@ def info(designation: str):
 
     designation = designation.upper()
     QproDefaultConsole.clear()
-    info, table = _info(designation, driver=driver) if _flag else _info(designation)
+    info, table = _info(designation, driver=driver, title=_title) if _flag else _info(designation, title=_title)
     date = requirePackage("datetime", "datetime").strptime(info["date"], "%Y-%m-%d")
     if not info:
         return
@@ -194,8 +194,8 @@ def rank(enable_translate: bool = False):
             company = ask_company()
         else:
             info = infos[int(index) - 1]
-            QproDefaultConsole.print(QproInfoString, info["designation"])
-            downloadable = app.real_call("info", info["designation"])
+            QproDefaultConsole.print(QproInfoString, info["designation"], info['title'])
+            downloadable = app.real_call("info", info["designation"], _title=info["title"].replace(' ', ''))
             if (
                 not downloadable
                 and info["designation"] not in wish_list.get_list()
@@ -299,7 +299,7 @@ def top():
             break
         else:
             info = infos[int(index) - 1]
-            app.real_call("info", info["designation"])
+            app.real_call("info", info["designation"], _title=info["title"].replace(' ', ''))
             QproDefaultConsole.clear()
 
 

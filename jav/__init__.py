@@ -252,6 +252,8 @@ def info_func_wrapper(func):
                     "imgs": [],
                     "title": designation,
                 }
+            if kwargs.get("title"):
+                raw_info['title'] = kwargs.get("title")
             with QproDefaultConsole.status("查询番号信息") as st:
                 from bs4 import BeautifulSoup
 

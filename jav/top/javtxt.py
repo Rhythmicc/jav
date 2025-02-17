@@ -1,8 +1,7 @@
 from .. import *
 from .. import _ask
 
-root_url = "https://javtxt.com"
-url = f"{root_url}/rank"
+url = f"https://javtxt.com/rank"
 
 
 def last_year():
@@ -14,14 +13,18 @@ def parse_cn_title(url):
     from .. import requests
     from bs4 import BeautifulSoup
 
-    html_text = requests.get(url).text
-    soup = BeautifulSoup(html_text, "html.parser")
-    title = soup.find("h2", class_="text-zh").text.strip()
+    try:
+        html_text = requests.get(url).text
+        soup = BeautifulSoup(html_text, "html.parser")
+        title = soup.find("h2", class_="text-zh").text.strip()
+    except Exception:
+        title = "Parse Error: " + url
 
     return title
 
 
 def parallel_parse_title(a_s):
+    from urllib.parse import urljoin
     from QuickStart_Rhy.TuiTools.Bar import NormalProgressBar
     from concurrent.futures import ThreadPoolExecutor 
 
@@ -29,7 +32,7 @@ def parallel_parse_title(a_s):
     progress.start()
 
     def parse_title(a):
-        title = parse_cn_title(f'{root_url}/{a["href"]}')
+        title = parse_cn_title(urljoin(url, a["href"]))
         progress.advance(task_id)
         return title
 

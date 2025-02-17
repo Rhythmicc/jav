@@ -65,7 +65,7 @@ def _cover(designation: str):
 
 
 @info_func_wrapper
-def _info(designation: str):
+def _info(designation: str, *args, **kwargs):
     """
     查询番号信息
 
@@ -99,7 +99,7 @@ def _info(designation: str):
 
     info = {}
     info["img"] = page.find("img", class_="video-cover").get("src")
-    info["title"] = translate(page.find("strong", class_="current-title").text)
+    info["title"] = page.find("strong", class_="current-title").text
     info["imgs"] = [i.get("href") for i in page.find_all("a", class_="tile-item")]
     info["imgs"] = [i for i in info["imgs"] if i.startswith("http")]
 
